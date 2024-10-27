@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Startseite</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+    <fieldset id="playerSelection">
+        <legend>Choose Number of Players</legend>
+        <div>
+            <input type="radio" name="players" value="1" checked>
+            <label for="onePlayer">1 Player</label>
+        </div>
+        <div>
+            <input type="radio" name="players" value="2">
+            <label for="twoPlayers">2 Players</label>
+        </div>
+        <div>
+            <input type="radio" name="players" value="3">
+            <label for="threePlayers">3 Players</label>
+        </div>
+        <div>
+            <input type="radio" name="players" value="4">
+            <label for="fourPlayers">4 Players</label>
+        </div>
+    </fieldset>
+    <button class="start-button" onclick="startGame()">Start</button>
+
+    <script>
+        function startGame() {
+            const selectedPlayers = document.querySelector('input[name="players"]:checked').value;
+            sessionStorage.setItem('playerCount', selectedPlayers);  // Save player count
+            location.href = 'game.html';
+        }
+    </script>
+</body>
+
+</html>
