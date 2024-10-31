@@ -5,7 +5,7 @@ export class Player {
         this.width = 20;
         this.height = 20;
         this.color = color;
-        this.speed = 5;
+        this.speed = 10;
         this.controls = controls;
         this.points = 0;
         this.finished = false;

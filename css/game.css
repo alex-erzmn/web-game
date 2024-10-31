@@ -1,72 +1,106 @@
-/* Body styling to center the wrapper */
 body {
+  font-family: Arial, sans-serif;
+  background-color: #282c34;
+  color: rgb(0, 0, 0);
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   height: 100vh;
   margin: 0;
-  background-color: #f0f0f0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Wrapper around the main container and spacers */
-#wrapper {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  max-width: 1600px; /* Max width to keep centered layout on larger screens */
-}
-
-/* Left and right empty spacers for equal distance */
-#leftSpacer, #rightSpacer {
-  flex: 1;
-}
-
-/* Main container holding canvas and score table */
 #container {
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 20px; /* Space between canvas and score table */
+  gap: 20px;
+  position: relative;
+  z-index: 1;
 }
 
-/* Canvas styling */
+#game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+}
+
 canvas {
-  border: 1px solid black;
+  border: 4px solid #787ec5;
+  border-radius: 12px; /* Rounded corners */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Soft shadow */
   display: block;
+  background-color: rgba(255, 255, 255, 1);
+  width: calc(100% - 8px); /* Reduce width by border size */
+  height: calc(100% - 8px); /* Reduce height by border size */
+  box-sizing: border-box; /* Ensure padding/borders are included in total size */
 }
 
-/* Score table styling */
 #scoreTable {
   text-align: left;
   font-size: 18px;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  max-width: 300px;
 }
 
-/* Button styling */
-.mainMenu-button {
-  padding: 15px 30px;
-  font-size: 24px;
+#scoreTable h2 {
+  text-align: center;
+  margin-bottom: 10px;
+  color: #282c34;
+}
+
+#scoreTable tr:nth-child(even) {
+  background-color: #787ec5;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background-color: #787ec5;
   color: white;
-  background-color: #007bff;
+  padding: 10px;
+  border-bottom: 2px solid #696fab;
+}
+
+td {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+tr:hover td {
+  background-color: rgba(121, 126, 197, 0.3);
+}
+.mainMenu-button {
+  background-color: #787ec5;
+  color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
+  padding: 15px 30px;
+  margin: 10px;
+  font-size: 1.5em;
   cursor: pointer;
-  transition: background-color 0.3s;
-  margin-top: 20px;
+  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  z-index: 1;
+  position: relative;
 }
 
 .mainMenu-button:hover {
-  background-color: #0056b3;
-}
-
-#muteButton {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  padding: 10px;
-  background-color: #f00;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
+  background-color: #696fab;
+  transform: scale(1.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); 
 }

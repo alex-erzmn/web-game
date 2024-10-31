@@ -1,24 +1,18 @@
 export class GamePhysics {
+
     static checkCollisionWithBoundaries(player, canvas) {
-        const canvasRect = canvas.getBoundingClientRect();
 
-        // Define boundaries based on canvas rect and player size
-        const leftBound = canvasRect.left; // Left edge of the canvas
-        const rightBound = canvasRect.right; // Right edge of the canvas
-        const topBound = canvasRect.top; // Top edge of the canvas
-        const bottomBound = canvasRect.bottom; // Bottom edge of the canvas
+        // Check for collision with boundaries
+        if (player.x <= 0 - player.width / 2 || player.x + player.width / 2 >= canvas.width) {
+            return true;
+        }
 
-        // Calculate player's new position relative to the window
-        const playerLeft = player.x + canvasRect.left; // Absolute left position
-        const playerRight = player.x + player.width + canvasRect.left; // Absolute right position
-        const playerTop = player.y + canvasRect.top; // Absolute top position
-        const playerBottom = player.y + player.height + canvasRect.top; // Absolute bottom position
+        // Check for collision with boundaries
+        if (player.y <= 0 - player.height / 2 || player.y + player.height / 2 >= canvas.height) {
+            return true;
+        }
 
-        // Check if the new position is within the bounds
-        const withinXBounds = playerLeft >= leftBound && playerRight <= rightBound;
-        const withinYBounds = playerTop >= topBound && playerBottom <= bottomBound;
-
-        return !withinXBounds || !withinYBounds;
+        return false;
     }
 
     static checkPlayerCollisions(currentPlayer, players, canvas, obstacles) {

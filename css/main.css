@@ -1,87 +1,82 @@
-/* main.css */
-
-body {
-  font-family: Arial, sans-serif;
-  background-color: #282c34; /* Dark background */
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  margin: 0;
-  text-align: center;
-  position: relative; /* Make sure body is positioned */
-  overflow: hidden; /* Prevent scrollbars from appearing */
-}
-
-.container {
-  background: rgba(50, 50, 50, 0.8); /* Semi-transparent dark background */
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  position: relative; /* Make sure container is positioned above the background */
-  z-index: 1; /* Ensure the container is above the background */
-}
-
-h1 {
-  margin-bottom: 20px;
-  font-size: 2.5em;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
-}
-
-fieldset {
-  border: none; /* Remove default fieldset border */
-  margin: 0;
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
   padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }
 
-.player-option {
+.settings-container {
+  position: absolute;
+  top: 20px;
+  left: 20px;
   display: flex;
-  align-items: center;
+  gap: 10px;
+  z-index: 2;
+}
+
+ /* Styles for the settings popup */
+ .settings-popup {
+  display: none; /* Hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
   justify-content: center;
-  margin: 10px 0;
+  align-items: center;
+  z-index: 100; /* On top of everything else */
 }
 
-.player-option input {
-  display: none; /* Hide radio buttons */
-}
-
-.player-option label {
-  display: inline-block;
-  padding: 15px;
-  margin: 0 10px;
-  background-color: #ff6347; /* Tomato color */
-  color: white;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s; /* Animation on hover */
-  width: 120px; /* Fixed width for consistency */
+.settings-content {
+  background-color: white;
+  color: #282c34;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  width: 90%;
   text-align: center;
 }
 
-.player-option input:checked + label {
-  background-color: #28a745; /* Green for selected option */
-}
-
-.player-option label:hover {
-  background-color: #ff4500; /* Darker tomato on hover */
-  transform: scale(1.05); /* Slightly enlarge */
-}
-
-.start-button {
-  background-color: #007bff; /* Bootstrap blue */
+.close-button {
+  background-color: #ff0000; /* Red close button */
   color: white;
   border: none;
-  border-radius: 10px;
-  padding: 15px 30px;
-  font-size: 1.5em;
+  padding: 10px 15px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;
 }
 
-.start-button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
-  transform: scale(1.1); /* Slightly enlarge */
+/* Button hover effect */
+.close-button:hover {
+  background-color: #cc0000;
+}
+
+.sound-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 2;
+}
+
+.mute-button, .settings-button {
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 1.5em;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.mute-button:hover, .settings-button:hover {
+  color: #ff8d47;
 }
 
 body::before {
@@ -91,33 +86,33 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 0; /* Ensure it is behind the container */
+  z-index: 0;
 }
 
 .squares-container {
-  position: absolute; /* Positioning for the background layer */
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden; /* Prevent squares from overflowing */
-  z-index: 0; /* Ensure it's behind the container */
+  overflow: hidden;
+  z-index: 0;
 }
 
 .square {
   position: absolute;
-  width: 20px; /* Width of the square */
-  height: 20px; /* Height of the square */
-  background-color: rgba(255, 255, 255, 0.8); /* Light color with transparency */
-  animation: fly 5s linear infinite; /* Animation for flying squares */
+  width: 20px;
+  height: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  animation: fly 5s linear infinite;
 }
 
-/* Animation keyframes */
 @keyframes fly {
   0% {
-      transform: translateY(0); /* Start position */
+    transform: translateY(0);
   }
+
   100% {
-      transform: translateY(-100vh); /* Fly upwards out of view */
+    transform: translateY(-100vh);
   }
 }

@@ -29,6 +29,7 @@ export class Game {
         const playerCount = parseInt(sessionStorage.getItem('playerCount')) || 1;
         this.setupInput();
         this.initializePlayers(playerCount);
+        this.updateScoreTable();
 
         LevelFactory.loadLevels('./js/levels/levels.json').then(levels => {
             this.levels = levels;
@@ -114,10 +115,43 @@ export class Game {
                 this.gameRunning = true; // Ensure the game is still running after countdown
             }); // Start countdown for the next level
         } else {
-            console.log("All levels completed!");
             this.gameRunning = false;
-            backgroundMusic.pause();
+            this.gameFinished();
         }
+    }
+
+    gameFinished() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.fillStyle = 'black';
+        this.ctx.font = '48px Arial';
+        this.ctx.textAlign = 'center';
+        this.ctx.textBaseline = 'middle';
+        this.ctx.fillText("All levels completed!", this.canvasWidth / 2, this.canvasHeight / 2);
+
+        this.startConfetti();
+        Sounds.soundEffects.allLevelsCompleted.play();
+    }
+
+    startConfetti() {
+        const duration = 5 * 1000; // 5 seconds
+        const end = Date.now() + duration;
+    
+        const interval = setInterval(() => {
+            const timeLeft = end - Date.now();
+            confetti({
+                particleCount: 100,
+                startVelocity: 30,
+                spread: 360,
+                origin: {
+                    x: Math.random(), // Random x-coordinate (0-1)
+                    y: Math.random() - 0.2 // Random y-coordinate (0-0.2)
+                },
+            });
+    
+            if (timeLeft <= 0) {
+                clearInterval(interval);
+            }
+        }, 250);
     }
 
     gameLoop() {
@@ -208,9 +242,7 @@ export class Game {
     }
 
     draw() {
-        // this.ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';  // Adjust alpha for desired fading strength
-        // this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // 
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.players.forEach(player => {
             if (!player.finished) {
@@ -227,18 +259,42 @@ export class Game {
         const scoreTableBody = document.querySelector('#scoreTable tbody');
         scoreTableBody.innerHTML = ''; // Clear existing scores
 
-        this.players.forEach(player => {
-            const row = document.createElement('tr');
-            const playerCell = document.createElement('td');
-            const scoreCell = document.createElement('td');
+        const sortedPlayers = this.players.sort((a, b) => b.points - a.points);
 
-            playerCell.textContent = player.color; // Display player color or name
+        sortedPlayers.forEach((player, index) => {
+            const row = document.createElement('tr');
+
+            // Create a cell for the color square
+            const playerCell = document.createElement('td');
+            const colorSquare = this.createColorSquare(player.color); // Create square
+            playerCell.appendChild(colorSquare); // Append square to the cell
+
+            const scoreCell = document.createElement('td');
             scoreCell.textContent = player.points; // Display player score
+
+            if (index === 0) { // Check if it's the first player
+                const crownIcon = document.createElement('span'); // Create span for crown
+                crownIcon.classList.add('fa-solid', 'fa-crown'); // Add Font Awesome classes
+                crownIcon.style.color = 'gold'; // Optional: Set color for the crown
+                crownIcon.style.marginLeft = '10px'; // Optional: Add some spacing to the left
+                scoreCell.appendChild(crownIcon); // Append crown icon to the score cell
+            }
 
             row.appendChild(playerCell);
             row.appendChild(scoreCell);
             scoreTableBody.appendChild(row);
         });
+    }
+
+    // Function to create a colored square
+    createColorSquare(color) {
+        const square = document.createElement('div');
+        square.style.width = '20px'; // Set width for the square
+        square.style.height = '20px'; // Set height for the square
+        square.style.backgroundColor = color; // Set the background color
+        square.style.display = 'inline-block'; // Keep the square inline
+        square.style.marginRight = '10px'; // Add space between square and text
+        return square;
     }
 
     checkPlayerReachedExit() {
