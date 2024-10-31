@@ -1,32 +1,72 @@
+/* Body styling to center the wrapper */
 body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100vh; /* 100% der Höhe des Viewports */
-    margin: 10px;
-    background-color: #f0f0f0; /* Helles Grau */
-    font-family: Arial, sans-serif; /* Schriftart */
-    overflow: hidden; /* Prevent scrolling */
-  }
-
-canvas {
-    border: 1px solid black;
-    display: block;
-    margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f0f0f0;
 }
 
+/* Wrapper around the main container and spacers */
+#wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 1600px; /* Max width to keep centered layout on larger screens */
+}
+
+/* Left and right empty spacers for equal distance */
+#leftSpacer, #rightSpacer {
+  flex: 1;
+}
+
+/* Main container holding canvas and score table */
+#container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px; /* Space between canvas and score table */
+}
+
+/* Canvas styling */
+canvas {
+  border: 1px solid black;
+  display: block;
+}
+
+/* Score table styling */
+#scoreTable {
+  text-align: left;
+  font-size: 18px;
+}
+
+/* Button styling */
 .mainMenu-button {
-    padding: 15px 30px; /* Innenabstand */
-    font-size: 24px; /* Schriftgröße */
-    color: white; /* Schriftfarbe */
-    background-color: #007bff; /* Blau */
-    border: none; /* Keine Umrandung */
-    border-radius: 5px; /* Abgerundete Ecken */
-    cursor: pointer; /* Zeiger bei Hover */
-    transition: background-color 0.3s; /* Sanfter Übergang bei Hover */
-    margin: 10px;
-  }
-  
-  .mainMenu-button:hover {
-    background-color: #0056b3; /* Dunkleres Blau bei Hover */
-  }
+  padding: 15px 30px;
+  font-size: 24px;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 20px;
+}
+
+.mainMenu-button:hover {
+  background-color: #0056b3;
+}
+
+#muteButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 10px;
+  background-color: #f00;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}

@@ -1,4 +1,5 @@
 import { Obstacle } from "./obstacle.js";
+import { Sounds } from "../../../sounds.js"
 
 export class MovingObstacle extends Obstacle {
     constructor(x, y, width, height, speed, direction) {
@@ -20,6 +21,7 @@ export class MovingObstacle extends Obstacle {
             if (this.x <= 0 || this.x + this.width >= canvas.width) {
                 this.speed = -this.speed; // Change direction
                 this.x = prevX; // Revert to previous position
+                Sounds.soundEffects.collision.play();
             }
         } else if (this.direction === 'vertical') {
             this.y += this.speed;
@@ -28,11 +30,15 @@ export class MovingObstacle extends Obstacle {
             if (this.y <= 0 || this.y + this.height >= canvas.height) {
                 this.speed = -this.speed; // Change direction
                 this.y = prevY; // Revert to previous position
+                Sounds.soundEffects.collision.play();
             }
         }
 
         // Check for collisions with other obstacles
         obstacles.forEach(obstacle => {
+            if (this === obstacle) {
+                return;
+            }
             if (this.collidesWith(obstacle)) {
                 // Determine the direction of collision and resolve
                 if (this.direction === 'horizontal') {
@@ -52,8 +58,8 @@ export class MovingObstacle extends Obstacle {
                         this.y = obstacle.y + obstacle.height; // Move below the obstacle
                     }
                 }
-                
                 this.speed = -this.speed; // Change direction after resolving collision
+                Sounds.soundEffects.collision.play();
             }
         });
     }
@@ -70,5 +76,9 @@ export class MovingObstacle extends Obstacle {
             this.y < other.y + other.height &&
             this.y + this.height > other.y
         );
+    }
+
+    onCollision(player) {
+        return;
     }
 }

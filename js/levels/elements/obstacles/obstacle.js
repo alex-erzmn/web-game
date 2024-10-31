@@ -17,4 +17,8 @@ export class Obstacle {
                  player.y + player.size < this.y || 
                  player.y > this.y + this.height);
     }
+
+    onCollision(player) {
+        return;
+    }
 }

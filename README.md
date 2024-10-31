@@ -5,19 +5,20 @@ Based on the course ‘W3Cx JS.0xJavaScript Introduction’ by Michael Buffat on
 ## description
 
 In this project you'll be developing a simple 2D multiplayer game, but with evolving levels. Main gameplay idea:
-- All players are represented by a square of a different color. On the same machine, the game can be played by 1 to 4 players. By default, it can be played with the keyboard, and optionally with GamePads (you don't have to integrate this feature, only if you want to).
-- Players all start in the top-left corner of the room, with a 5-4-3-2-1 countdown to start the game.
-- All players must reach an exit, which by default will be represented by a clearly visible yellow circle with a black border, located within the level. 
-
-
-**Level 1:** For level 1, imagine a rectangular room with walls around the edges, and the famous yellow-and-black circle in the bottom right-hand corner. As soon as the starting signal is given, players race to the exit. The first to arrive gets 4 points, the second 3, and so on. Or you could imagine a scoring system based on the time taken to reach the exit.
-    - Players can go in any direction, including diagonally. You can imagine a limited “dash” option (quick acceleration for a very limited time)
-    - Collisions between players and with obstacles are taken into account (you can't go through walls, but you can push other players).
+- All players are represented by a square of a different color. On the same machine, the game can be played by 1 to 4 players. By default, it can be played with the keyboard, and optionally with GamePads (you don't have to integrate this feature, only if you want to). ✅
+- Players all start in the top-left corner of the room, with a 5-4-3-2-1 countdown to start the game. ✅
+- All players must reach an exit, which by default will be represented by a clearly visible yellow circle with a black border, located within the level.  ✅
 
 As levels increase, new elements appear:
-**Levels 2-4:** vertical walls appear, the path to the exit is no longer straight, but you have to follow the increasingly complicated corridors, sometimes with dead ends.
-**Levels 4-8*:** walls can move vertically or horizontally.
-**Levels 8-15:** (I'm giving the numbers as a guide, you don't have to follow them to the letter): new elements appear: bonuses that increase the player's speed, malus that invert the controls for 3 seconds, zones on the course that slow down or teleport elsewhere. Fans speed up or slow down certain corridors...
+**Level 1:** For level 1, imagine a rectangular room with walls around the edges, and the famous yellow-and-black circle in the bottom right-hand corner. As soon as the starting signal is given, players race to the exit. The first to arrive gets 4 points, the second 3, and so on. Or you could imagine a scoring system based on the time taken to reach the exit. ✅
+    - Players can go in any direction, including diagonally. You can imagine a limited “dash” option (quick acceleration for a very limited time) ✅
+    - Collisions between players and with obstacles are taken into account (you can't go through walls, but you can push other players). ✅
+**Levels 2-4:** vertical walls appear, the path to the exit is no longer straight, but you have to follow the increasingly complicated corridors, sometimes with dead ends. ✅
+**Levels 4-8*:** walls can move vertically or horizontally. ✅
+
+--------------------- Current state -------------------------
+
+**Levels 8-15:** New elements appear: bonuses that increase the player's speed, malus that invert the controls for 3 seconds, zones on the course that slow down or teleport elsewhere. Fans speed up or slow down certain corridors...
 **Levels 15-20:** certain walls must not be touched, otherwise you'll be electrocuted and have to start all over again.
     - It's up to you: you can add enemies, bouncing balls between walls, the possibility, as in Mario Kart, of picking up items that you can throw or drop, etc. 
     - switches that change the level topology

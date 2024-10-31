@@ -2,7 +2,7 @@ export class Exit {
     constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.radius = 20;
+        this.radius = 10;
     }
 
     draw(ctx) {
@@ -17,6 +17,6 @@ export class Exit {
 
     checkPlayerReached(player) {
         const dist = Math.hypot(player.x - this.x, player.y - this.y);
-        return dist < this.radius;
+        return dist < this.radius + 10; // Adding a buffer to make it easier
     }
 }

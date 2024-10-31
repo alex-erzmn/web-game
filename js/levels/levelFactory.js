@@ -20,14 +20,7 @@ export class LevelFactory {
             const exit = new Exit(levelData.exit.x, levelData.exit.y);
 
             const obstacles = levelData.obstacles?.map(obstacleData =>
-                new Obstacle(obstacleData.x, obstacleData.y, obstacleData.width, obstacleData.height)
-            ) || [];
-
-            const movingObstacles = levelData.movingObstacles?.map(movingObstacleData =>
-                new MovingObstacle(
-                    movingObstacleData.x, movingObstacleData.y, movingObstacleData.width, movingObstacleData.height,
-                    movingObstacleData.speed, movingObstacleData.direction
-                )
+                LevelFactory.createObstacle(obstacleData)
             ) || [];
 
             const enemies = levelData.enemies?.map(enemyData =>
@@ -43,7 +36,20 @@ export class LevelFactory {
             const items = levelData.items?.map(itemData => new Item()) || [];  // Default to an empty array if items are missing
             const layouts = levelData.layouts?.map(levelData => new Layout()) || [];
 
-            return new Level(start, exit, obstacles, movingObstacles, enemies, items, layouts);
+            return new Level(start, exit, obstacles, enemies, items, layouts); // No separate movingObstacles array
         });
+    }
+
+    // Factory method to create obstacles based on their type
+    static createObstacle(data) {
+        switch (data.type) {
+            case 'Obstacle':
+                return new Obstacle(data.x, data.y, data.width, data.height);
+            case 'MovingObstacle':
+                return new MovingObstacle(data.x, data.y, data.width, data.height, data.speed, data.direction);
+            // Add more cases here for other obstacle types
+            default:
+                throw new Error(`Unknown obstacle type: ${data.type}`);
+        }
     }
 }

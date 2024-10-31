@@ -2,6 +2,7 @@ import { Player } from './player.js';
 import { LevelFactory } from './levels/levelFactory.js';
 import { GamePhysics } from './gamePhysics.js';
 import { MovingObstacle } from './levels/elements/obstacles/movingObstacle.js';
+import { Sounds } from './sounds.js';
 
 export class Game {
     constructor() {
@@ -14,7 +15,6 @@ export class Game {
         this.players = [];
         this.finishedPlayers = new Set();
         this.obstacles = [];
-        this.movingObstacles = [];
         this.enemies = [];
         this.items = [];
         this.layout = [];
@@ -23,7 +23,8 @@ export class Game {
         this.countdownActive = false;
         this.countdownNumber = 5;
         this.gameRunning = false;
-        const backgroundMusic = document.getElementById('background-music');
+        this.overlapBuffer = 30; // buffer frames to avoid collisions at start
+        this.framesSinceStart = 0; // track frames since start for initial overlap
 
         const playerCount = parseInt(sessionStorage.getItem('playerCount')) || 1;
         this.setupInput();
@@ -33,9 +34,7 @@ export class Game {
             this.levels = levels;
             this.prepareStage();
             this.startCountdown(5, () => {
-                backgroundMusic.play().catch(error => {
-                    console.log("Audio playback failed:", error);
-                });
+                Sounds.backgroundMusic.play();
                 this.gameRunning = true; // Game is now running
                 this.gameLoop(); // Start the game loop
             }); // Start with a 5-second countdown
@@ -94,11 +93,11 @@ export class Game {
     prepareStage() {
         const currentLevelData = this.levels[this.currentLevel];
         this.obstacles = currentLevelData.obstacles;
-        this.movingObstacles = currentLevelData.movingObstacles;
         this.exit = currentLevelData.exit;
         this.enemies = currentLevelData.enemies;
         this.items = currentLevelData.items;
         this.layout = currentLevelData.layout;
+        this.framesSinceStart = 0; // reset overlap buffer on new level
 
         const startPosition = currentLevelData.start;
         this.players.forEach(player => {
@@ -131,9 +130,14 @@ export class Game {
 
     update() {
         if (!this.countdownActive) { // Only update if countdown is not active
+            this.framesSinceStart++;
 
-            // Update moving obstacles
-            this.movingObstacles.forEach(movingObstacle => movingObstacle.update(this.canvas, this.obstacles));
+            // Update moving obstacles by filtering through the obstacles array
+            this.obstacles.forEach(movingObstacle => {
+                if (movingObstacle instanceof MovingObstacle) {
+                    movingObstacle.update(this.canvas, this.obstacles);
+                }
+            });
 
             // Moving Player
             this.players.forEach(player => {
@@ -150,8 +154,8 @@ export class Game {
                 var playerResettet = false;
 
                 // Check if player collides with moving obstacles
-                this.movingObstacles.forEach(movingObstacle => {
-                    if (movingObstacle.collidesWith(player)) {
+                this.obstacles.forEach(movingObstacle => {
+                    if (movingObstacle instanceof MovingObstacle && movingObstacle.collidesWith(player)) {
                         // Push the player in the moving direction of the obstacle
                         if (movingObstacle.direction === 'horizontal') {
                             player.x += movingObstacle.speed;
@@ -161,12 +165,12 @@ export class Game {
 
                         // Check for boundary collision after push
                         if (GamePhysics.checkCollisionWithObstacles(player, this.obstacles)
-                            || GamePhysics.checkCollisionWithObstacles(player, this.movingObstacles)
                             || GamePhysics.checkCollisionWithBoundaries(player, this.canvas)) {
                             // Reset player to starting position
                             player.x = this.levels[this.currentLevel].start.x;
                             player.y = this.levels[this.currentLevel].start.y;
                             playerResettet = true;
+                            Sounds.soundEffects.collision.play();
                         }
                     }
                 });
@@ -177,7 +181,6 @@ export class Game {
                     player.y = newY;
 
                     if (GamePhysics.checkCollisionWithObstacles(player, this.obstacles)
-                        || GamePhysics.checkCollisionWithObstacles(player, this.movingObstacles)
                         || GamePhysics.checkCollisionWithBoundaries(player, this.canvas)) {
                         // Collision detected, revert to original Y position
                         player.y = originalY;
@@ -188,11 +191,14 @@ export class Game {
                     player.x = newX;
 
                     if (GamePhysics.checkCollisionWithObstacles(player, this.obstacles)
-                        || GamePhysics.checkCollisionWithObstacles(player, this.movingObstacles)
                         || GamePhysics.checkCollisionWithBoundaries(player, this.canvas)) {
                         // Collision detected, revert to original X position
                         player.x = originalX;
                     }
+                }
+
+                if (this.framesSinceStart > this.overlapBuffer) {
+                    GamePhysics.checkPlayerCollisions(player, this.players, this.canvas, this.obstacles, this.movingObstacles);
                 }
 
             });
@@ -202,18 +208,38 @@ export class Game {
     }
 
     draw() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // Clear the canvas
+        // this.ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';  // Adjust alpha for desired fading strength
+        // this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // 
+
         this.players.forEach(player => {
             if (!player.finished) {
                 player.draw(this.ctx);
             }
         });
         this.obstacles.forEach(obstacle => obstacle.draw(this.ctx)); // Draw static obstacles
-        this.movingObstacles.forEach(obstacle => obstacle.draw(this.ctx)); // Draw moving obstacles
         if (this.exit) this.exit.draw(this.ctx); // Draw the exit point
+
+        this.updateScoreTable();
     }
 
+    updateScoreTable() {
+        const scoreTableBody = document.querySelector('#scoreTable tbody');
+        scoreTableBody.innerHTML = ''; // Clear existing scores
 
+        this.players.forEach(player => {
+            const row = document.createElement('tr');
+            const playerCell = document.createElement('td');
+            const scoreCell = document.createElement('td');
+
+            playerCell.textContent = player.color; // Display player color or name
+            scoreCell.textContent = player.points; // Display player score
+
+            row.appendChild(playerCell);
+            row.appendChild(scoreCell);
+            scoreTableBody.appendChild(row);
+        });
+    }
 
     checkPlayerReachedExit() {
         // Check if each player has reached the exit
@@ -222,6 +248,7 @@ export class Game {
                 player.points += 4 - this.finishedPlayers.size; // Award points based on the order of finish
                 this.finishedPlayers.add(player); // Mark player as finished
                 player.finished = true; // Set a flag to make them disappear visually
+                Sounds.soundEffects.goalReached.play(); // Play goal reached sound
             }
         });
 
