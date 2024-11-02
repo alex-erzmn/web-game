@@ -6,4 +6,5 @@ export class Enemie {
         this.movement = movement;
         this.weapon = weapon;
     }
+    //<i class="fa-solid fa-ghost"></i>
 }

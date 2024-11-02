@@ -13,24 +13,18 @@ if (!isset($abs_path)) {
     <?php
     include $abs_path . '/common/head.php';
     ?>
-    <link rel="stylesheet" href="css/game.css">   
+    <link rel="stylesheet" href="css/game.css">
     <script type="module" src="./js/game.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
 </head>
 
 <body>
 
-    <div class="settings-container">
-        <button id="settingsButton" class="settings-button"><i class="fa-solid fa-gear"></i></button>
-    </div>
+    <?php
+    include $abs_path . '/common/settings.php';
+    ?>
 
-    <!-- Sound control buttons in the top-right corner -->
-    <div class="sound-container">
-        <button id="muteMusicButton" class="mute-button"><i class="fas fa-music"></i></button>
-        <button id="muteSoundButton" class="mute-button"><i class="fas fa-volume-up"></i></button>
-    </div>
-
-    <div class="squares-container"></div> <!-- Container for flying squares -->
+    <div class="squares-container"></div> 
 
     <div id="container">
         <div id="game-container">
@@ -56,11 +50,6 @@ if (!isset($abs_path)) {
             </div>
         </div>
     </div>
-
-    <?php 
-    include $abs_path . '/settings.php';
-    ?>
-
 </body>
 
 </html>

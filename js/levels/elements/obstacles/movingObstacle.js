@@ -1,5 +1,5 @@
 import { Obstacle } from "./obstacle.js";
-import { Sounds } from "../../../sounds.js"
+import { Sounds } from "../../../background/sounds.js";
 
 export class MovingObstacle extends Obstacle {
     constructor(x, y, width, height, speed, direction) {
@@ -65,17 +65,10 @@ export class MovingObstacle extends Obstacle {
     }
 
     draw(ctx) {
+        ctx.save();
         ctx.fillStyle = 'green';
         ctx.fillRect(this.x, this.y, this.width, this.height);
-    }
-
-    collidesWith(other) {
-        return (
-            this.x < other.x + other.width &&
-            this.x + this.width > other.x &&
-            this.y < other.y + other.height &&
-            this.y + this.height > other.y
-        );
+        ctx.restore();
     }
 
     onCollision(player) {

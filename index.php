@@ -17,17 +17,11 @@ if (!isset($abs_path)) {
 
 <body>
 
-    <div class="settings-container">
-        <button id="settingsButton" class="settings-button"><i class="fa-solid fa-gear"></i></button>
-    </div>
+    <?php
+    include $abs_path . '/common/settings.php';
+    ?>
 
-    <!-- Sound control buttons in the top-right corner -->
-    <div class="sound-container">
-        <button id="muteMusicButton" class="mute-button"><i class="fas fa-music"></i><span class="visually-hidden">Mute Music Button</span></button>
-        <button id="muteSoundButton" class="mute-button"><i class="fas fa-volume-up"></i><span class="visually-hidden">Mute Sound Button</span></button>
-    </div>
-
-    <div class="squares-container"></div> <!-- Container for flying squares -->
+    <div class="squares-container"></div>
 
     <div class="container">
         <h1>Square Escape</h1>
@@ -76,11 +70,22 @@ if (!isset($abs_path)) {
         </fieldset>
         <button class="start-button" onclick="startGame()">Start Game</button>
     </div>
+    <script type="module">
+        import { Sounds } from './js/background/sounds.js';
 
-    <?php 
-    include $abs_path . '/settings.php';
-    ?>
+        let musicPlaying = false; // Flag to track if music is playing
 
+
+        document.querySelectorAll('input[name="players"]').forEach((radio) => {
+            radio.addEventListener('change', (event) => {
+                // Play music only if it's not already playing
+                if (!musicPlaying) {
+                    Sounds.backgroundMusic.mainBackgroundMusic.play(); // Start the background music
+                    musicPlaying = true; // Set the flag to true
+                }
+            });
+        });
+    </script>
     <script>
         function startGame() {
             const selectedPlayers = document.querySelector('input[name="players"]:checked');
@@ -90,6 +95,7 @@ if (!isset($abs_path)) {
             sessionStorage.setItem('playerCount', selectedPlayers.value);  // Save player count
             location.href = 'game.php';
         }
+
     </script>
 </body>
 

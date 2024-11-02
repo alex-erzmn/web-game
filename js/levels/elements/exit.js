@@ -14,9 +14,4 @@ export class Exit {
         ctx.strokeStyle = 'black';
         ctx.stroke();
     }
-
-    checkPlayerReached(player) {
-        const dist = Math.hypot(player.x - this.x, player.y - this.y);
-        return dist < this.radius + 10; // Adding a buffer to make it easier
-    }
 }

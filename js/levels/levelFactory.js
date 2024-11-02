@@ -4,7 +4,7 @@ import { MovingObstacle } from './elements/obstacles/movingObstacle.js';
 import { Exit } from './elements/exit.js';
 import { Start } from './elements/start.js';
 import { Enemie } from './elements/enemies/enemie.js';
-import { Item } from './elements/items/item.js';
+import { Item } from './elements/item.js';
 import { Layout } from './layouts/Layout.js';
 
 export class LevelFactory {
@@ -33,7 +33,7 @@ export class LevelFactory {
                 )
             ) || [];
 
-            const items = levelData.items?.map(itemData => new Item()) || [];  // Default to an empty array if items are missing
+            const items = levelData.items?.map(itemData => new Item(itemData.type, itemData.x, itemData.y)) || [];  // Default to an empty array if items are missing
             const layouts = levelData.layouts?.map(levelData => new Layout()) || [];
 
             return new Level(start, exit, obstacles, enemies, items, layouts); // No separate movingObstacles array

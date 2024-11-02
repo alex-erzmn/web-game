@@ -7,17 +7,20 @@ export class Obstacle {
     }
 
     draw(ctx) {
+        ctx.save();
         ctx.fillStyle = 'black';
         ctx.fillRect(this.x, this.y, this.width, this.height);
+        ctx.restore();
     }
 
-    collidesWith(player) {
-        return !(player.x + player.size < this.x || 
-                 player.x > this.x + this.width || 
-                 player.y + player.size < this.y || 
-                 player.y > this.y + this.height);
+    collidesWith(other) {
+        return (
+            this.x < other.x + other.width &&
+            this.x + this.width > other.x &&
+            this.y < other.y + other.height &&
+            this.y + this.height > other.y
+        );
     }
-
     onCollision(player) {
         return;
     }

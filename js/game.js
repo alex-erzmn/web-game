@@ -2,29 +2,35 @@ import { Player } from './player.js';
 import { LevelFactory } from './levels/levelFactory.js';
 import { GamePhysics } from './gamePhysics.js';
 import { MovingObstacle } from './levels/elements/obstacles/movingObstacle.js';
-import { Sounds } from './sounds.js';
+import { Sounds } from './background/sounds.js';
 
 export class Game {
+
+    // -------------------------- Initialization --------------------------
+
     constructor() {
         this.canvas = document.getElementById('gameCanvas');
         this.ctx = this.canvas.getContext('2d');
         this.canvasWidth = this.canvas.width;
         this.canvasHeight = this.canvas.height;
-        this.levels = [];
-        this.currentLevel = 0;
+        this.confettiInstance = confetti.create(this.canvas, { resize: true });
         this.players = [];
         this.finishedPlayers = new Set();
+
+        // Level components
+        this.levels = [];
+        this.currentLevel = 0;
         this.obstacles = [];
         this.enemies = [];
         this.items = [];
         this.layout = [];
         this.exit = null;
+
         this.input = {};
         this.countdownActive = false;
-        this.countdownNumber = 5;
         this.gameRunning = false;
-        this.overlapBuffer = 30; // buffer frames to avoid collisions at start
-        this.framesSinceStart = 0; // track frames since start for initial overlap
+        this.overlapBuffer = 30;
+        this.framesSinceStart = 0;
 
         const playerCount = parseInt(sessionStorage.getItem('playerCount')) || 1;
         this.setupInput();
@@ -35,10 +41,10 @@ export class Game {
             this.levels = levels;
             this.prepareStage();
             this.startCountdown(5, () => {
-                Sounds.backgroundMusic.play();
-                this.gameRunning = true; // Game is now running
-                this.gameLoop(); // Start the game loop
-            }); // Start with a 5-second countdown
+                Sounds.backgroundMusic.gameBackgroundMusic.play();
+                this.gameRunning = true;
+                this.gameLoop();
+            });
         });
     }
 
@@ -66,21 +72,21 @@ export class Game {
         });
     }
 
+    // -------------------------- Countdown Management --------------------------
+
     startCountdown(countdownNumber, callback) {
-        this.countdownActive = true;  // Set countdown state to active
-        this.countdownNumber = countdownNumber; // Initialize countdown number
-
+        this.countdownActive = true;
         const countdownInterval = setInterval(() => {
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // Clear the canvas for each countdown frame
-            this.drawCountdown(this.countdownNumber); // Draw the countdown number
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.drawCountdown(countdownNumber);
 
-            if (this.countdownNumber <= 0) {
-                clearInterval(countdownInterval); // Stop the countdown
-                this.countdownActive = false; // Set countdown state to inactive
-                callback();  // Call the provided callback function
+            if (countdownNumber <= 0) {
+                clearInterval(countdownInterval);
+                this.countdownActive = false;
+                callback();
             }
-            this.countdownNumber--; // Decrement countdown number
-        }, 1000); // Update every second
+            countdownNumber--;
+        }, 1000);
     }
 
     drawCountdown(number) {
@@ -88,8 +94,141 @@ export class Game {
         this.ctx.font = '48px Arial';
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
-        this.ctx.fillText(number, this.canvasWidth / 2, this.canvasHeight / 2); // Draw countdown number in the center of the canvas
+        this.ctx.fillText(number, this.canvasWidth / 2, this.canvasHeight / 2);
     }
+
+    // -------------------------- Game Loop --------------------------
+
+    gameLoop() {
+        if (this.gameRunning) {
+            this.update();
+            this.draw();
+            requestAnimationFrame(this.gameLoop.bind(this));
+        }
+    }
+
+   update() {
+    if (!this.countdownActive) {
+        this.framesSinceStart++;
+
+        this.obstacles.forEach(movingObstacle => {
+            if (movingObstacle instanceof MovingObstacle) {
+                movingObstacle.update(this.canvas, this.obstacles);
+            }
+        });
+
+        this.players.forEach(player => {
+            let newX = player.x;
+            let newY = player.y;
+
+            if (this.input[player.controls.up]) newY -= player.speed;
+            if (this.input[player.controls.down]) newY += player.speed;
+            if (this.input[player.controls.left]) newX -= player.speed;
+            if (this.input[player.controls.right]) newX += player.speed;
+
+            const playerResetted = GamePhysics.checkPlayerWithMovingObstacle(
+                player, this.obstacles.filter(obs => obs instanceof MovingObstacle),
+                this.canvas, this.obstacles, this.levels[this.currentLevel].start
+            );
+
+            if (!playerResetted) {
+                const originalY = player.y;
+                player.y = newY;
+                if (GamePhysics.checkCollisionWithObstacles(player, this.obstacles) ||
+                    GamePhysics.checkCollisionWithBoundaries(player, this.canvas)) {
+                    player.y = originalY;
+                }
+
+                const originalX = player.x;
+                player.x = newX;
+                if (GamePhysics.checkCollisionWithObstacles(player, this.obstacles) ||
+                    GamePhysics.checkCollisionWithBoundaries(player, this.canvas)) {
+                    player.x = originalX;
+                }
+            }
+
+            if (this.framesSinceStart > this.overlapBuffer) {
+                GamePhysics.checkPlayerCollisions(player, this.players, this.canvas, this.obstacles);
+            }
+        });
+
+        this.checkPlayerReachedExit();
+        this.updateScoreTable();
+    }
+}
+
+    draw() {
+        this.ctx.save();
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        this.players.forEach(player => {
+            if (!player.finished) {
+                player.draw(this.ctx);
+            }
+        });
+        this.obstacles.forEach(obstacle => obstacle.draw(this.ctx));
+        this.items.forEach(item => item.draw(this.ctx));
+        this.exit.draw(this.ctx);
+
+        this.ctx.restore();
+    }
+
+    updateScoreTable() {
+        const scoreTableBody = document.querySelector('#scoreTable tbody');
+        scoreTableBody.innerHTML = '';
+
+        const sortedPlayers = this.players.sort((a, b) => b.points - a.points);
+
+        sortedPlayers.forEach((player, index) => {
+            const row = document.createElement('tr');
+
+            const playerCell = document.createElement('td');
+            const colorSquare = this.createColorSquare(player.color);
+            playerCell.appendChild(colorSquare);
+
+            const scoreCell = document.createElement('td');
+            scoreCell.textContent = player.points;
+
+            if (index === 0) {
+                const crownIcon = document.createElement('span');
+                crownIcon.classList.add('fa-solid', 'fa-crown');
+                crownIcon.style.color = 'gold';
+                crownIcon.style.marginLeft = '10px';
+                scoreCell.appendChild(crownIcon);
+            }
+
+            row.appendChild(playerCell);
+            row.appendChild(scoreCell);
+            scoreTableBody.appendChild(row);
+        });
+    }
+
+    createColorSquare(color) {
+        const square = document.createElement('div');
+        square.style.width = '20px';
+        square.style.height = '20px';
+        square.style.backgroundColor = color;
+        square.style.display = 'inline-block';
+        square.style.marginRight = '10px';
+        return square;
+    }
+
+    checkPlayerReachedExit() {
+        this.players.forEach((player) => {
+            if (this.exit && GamePhysics.circleSquareCollision(player, this.exit) && !this.finishedPlayers.has(player)) {
+                player.points += 4 - this.finishedPlayers.size;
+                this.finishedPlayers.add(player);
+                player.finished = true;
+                Sounds.soundEffects.goalReached.play();
+            }
+        });
+
+        if (this.finishedPlayers.size === this.players.length) {
+            this.nextLevel();
+        }
+    }
+
+    // -------------------------- Level Management --------------------------
 
     prepareStage() {
         const currentLevelData = this.levels[this.currentLevel];
@@ -98,7 +237,7 @@ export class Game {
         this.enemies = currentLevelData.enemies;
         this.items = currentLevelData.items;
         this.layout = currentLevelData.layout;
-        this.framesSinceStart = 0; // reset overlap buffer on new level
+        this.framesSinceStart = 0;
 
         const startPosition = currentLevelData.start;
         this.players.forEach(player => {
@@ -110,210 +249,74 @@ export class Game {
     nextLevel() {
         this.currentLevel++;
         if (this.currentLevel < this.levels.length) {
-            this.prepareStage();
+            this.gameRunning = false;
             this.startCountdown(3, () => {
-                this.gameRunning = true; // Ensure the game is still running after countdown
-            }); // Start countdown for the next level
+                this.prepareStage();
+                this.players.forEach((player) => player.finished = false);
+                this.finishedPlayers.clear();
+                this.gameRunning = true;
+                this.gameLoop();
+            });
         } else {
             this.gameRunning = false;
             this.gameFinished();
         }
     }
 
+    // -------------------------- Game End Management --------------------------
+
     gameFinished() {
+        const winner = this.players.reduce((max, player) => (player.points > max.points ? player : max));
+
+        // Draw the end screen text directly on the canvas
+        this.drawEndScreen(winner); // DOES NOT WORK FOR SOME REASON :/
+
+        // Start the confetti animation
+        this.startConfetti();
+
+
+        // Play sound for game completion
+        Sounds.soundEffects.allLevelsCompleted.play();
+    }
+
+    drawEndScreen(winner) {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        this.ctx.save();
+
         this.ctx.fillStyle = 'black';
         this.ctx.font = '48px Arial';
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
         this.ctx.fillText("All levels completed!", this.canvasWidth / 2, this.canvasHeight / 2);
 
-        this.startConfetti();
-        Sounds.soundEffects.allLevelsCompleted.play();
+        this.ctx.fillStyle = winner.color;
+        this.ctx.font = '60px Arial';
+        this.ctx.fillText(`Winner: ${winner.color} player!`, this.canvasWidth / 2, this.canvasHeight / 2);
+
+        this.ctx.restore();
     }
 
     startConfetti() {
-        const duration = 5 * 1000; // 5 seconds
+        const duration = 5 * 1000;
         const end = Date.now() + duration;
-    
+
         const interval = setInterval(() => {
             const timeLeft = end - Date.now();
-            confetti({
+            this.confettiInstance({
                 particleCount: 100,
                 startVelocity: 30,
                 spread: 360,
                 origin: {
-                    x: Math.random(), // Random x-coordinate (0-1)
-                    y: Math.random() - 0.2 // Random y-coordinate (0-0.2)
+                    x: Math.random(),
+                    y: Math.random() - 0.2
                 },
             });
-    
+
             if (timeLeft <= 0) {
                 clearInterval(interval);
             }
         }, 250);
-    }
-
-    gameLoop() {
-        if (this.gameRunning) {
-            this.update();
-            this.draw();
-            requestAnimationFrame(this.gameLoop.bind(this));
-        }
-    }
-
-    update() {
-        if (!this.countdownActive) { // Only update if countdown is not active
-            this.framesSinceStart++;
-
-            // Update moving obstacles by filtering through the obstacles array
-            this.obstacles.forEach(movingObstacle => {
-                if (movingObstacle instanceof MovingObstacle) {
-                    movingObstacle.update(this.canvas, this.obstacles);
-                }
-            });
-
-            // Moving Player
-            this.players.forEach(player => {
-                // Separate new positions for x and y
-                let newX = player.x;  // Proposed new X
-                let newY = player.y;  // Proposed new Y
-
-                // Calculate proposed new positions based on input
-                if (this.input[player.controls.up]) newY -= player.speed; // Move up
-                if (this.input[player.controls.down]) newY += player.speed; // Move down
-                if (this.input[player.controls.left]) newX -= player.speed; // Move left
-                if (this.input[player.controls.right]) newX += player.speed; // Move right
-
-                var playerResettet = false;
-
-                // Check if player collides with moving obstacles
-                this.obstacles.forEach(movingObstacle => {
-                    if (movingObstacle instanceof MovingObstacle && movingObstacle.collidesWith(player)) {
-                        // Push the player in the moving direction of the obstacle
-                        if (movingObstacle.direction === 'horizontal') {
-                            player.x += movingObstacle.speed;
-                        } else if (movingObstacle.direction === 'vertical') {
-                            player.y += movingObstacle.speed;
-                        }
-
-                        // Check for boundary collision after push
-                        if (GamePhysics.checkCollisionWithObstacles(player, this.obstacles)
-                            || GamePhysics.checkCollisionWithBoundaries(player, this.canvas)) {
-                            // Reset player to starting position
-                            player.x = this.levels[this.currentLevel].start.x;
-                            player.y = this.levels[this.currentLevel].start.y;
-                            playerResettet = true;
-                            Sounds.soundEffects.collision.play();
-                        }
-                    }
-                });
-
-                if (!playerResettet) {
-                    // First, try moving vertically
-                    const originalY = player.y;
-                    player.y = newY;
-
-                    if (GamePhysics.checkCollisionWithObstacles(player, this.obstacles)
-                        || GamePhysics.checkCollisionWithBoundaries(player, this.canvas)) {
-                        // Collision detected, revert to original Y position
-                        player.y = originalY;
-                    }
-
-                    // Now, try moving horizontally
-                    const originalX = player.x;
-                    player.x = newX;
-
-                    if (GamePhysics.checkCollisionWithObstacles(player, this.obstacles)
-                        || GamePhysics.checkCollisionWithBoundaries(player, this.canvas)) {
-                        // Collision detected, revert to original X position
-                        player.x = originalX;
-                    }
-                }
-
-                if (this.framesSinceStart > this.overlapBuffer) {
-                    GamePhysics.checkPlayerCollisions(player, this.players, this.canvas, this.obstacles, this.movingObstacles);
-                }
-
-            });
-
-            this.checkPlayerReachedExit();
-        }
-    }
-
-    draw() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        this.players.forEach(player => {
-            if (!player.finished) {
-                player.draw(this.ctx);
-            }
-        });
-        this.obstacles.forEach(obstacle => obstacle.draw(this.ctx)); // Draw static obstacles
-        if (this.exit) this.exit.draw(this.ctx); // Draw the exit point
-
-        this.updateScoreTable();
-    }
-
-    updateScoreTable() {
-        const scoreTableBody = document.querySelector('#scoreTable tbody');
-        scoreTableBody.innerHTML = ''; // Clear existing scores
-
-        const sortedPlayers = this.players.sort((a, b) => b.points - a.points);
-
-        sortedPlayers.forEach((player, index) => {
-            const row = document.createElement('tr');
-
-            // Create a cell for the color square
-            const playerCell = document.createElement('td');
-            const colorSquare = this.createColorSquare(player.color); // Create square
-            playerCell.appendChild(colorSquare); // Append square to the cell
-
-            const scoreCell = document.createElement('td');
-            scoreCell.textContent = player.points; // Display player score
-
-            if (index === 0) { // Check if it's the first player
-                const crownIcon = document.createElement('span'); // Create span for crown
-                crownIcon.classList.add('fa-solid', 'fa-crown'); // Add Font Awesome classes
-                crownIcon.style.color = 'gold'; // Optional: Set color for the crown
-                crownIcon.style.marginLeft = '10px'; // Optional: Add some spacing to the left
-                scoreCell.appendChild(crownIcon); // Append crown icon to the score cell
-            }
-
-            row.appendChild(playerCell);
-            row.appendChild(scoreCell);
-            scoreTableBody.appendChild(row);
-        });
-    }
-
-    // Function to create a colored square
-    createColorSquare(color) {
-        const square = document.createElement('div');
-        square.style.width = '20px'; // Set width for the square
-        square.style.height = '20px'; // Set height for the square
-        square.style.backgroundColor = color; // Set the background color
-        square.style.display = 'inline-block'; // Keep the square inline
-        square.style.marginRight = '10px'; // Add space between square and text
-        return square;
-    }
-
-    checkPlayerReachedExit() {
-        // Check if each player has reached the exit
-        this.players.forEach((player) => {
-            if (this.exit && this.exit.checkPlayerReached(player) && !this.finishedPlayers.has(player)) {
-                player.points += 4 - this.finishedPlayers.size; // Award points based on the order of finish
-                this.finishedPlayers.add(player); // Mark player as finished
-                player.finished = true; // Set a flag to make them disappear visually
-                Sounds.soundEffects.goalReached.play(); // Play goal reached sound
-            }
-        });
-
-        // Only proceed if all players have reached the exit
-        if (this.finishedPlayers.size === this.players.length) {
-            this.players.forEach((player) => player.finished = false);
-            this.finishedPlayers.clear();
-            this.nextLevel(); // Move to the next level
-        }
     }
 }
 
