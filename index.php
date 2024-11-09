@@ -93,9 +93,9 @@ if (!isset($abs_path)) {
                 return;
             }
             sessionStorage.setItem('playerCount', selectedPlayers.value);  // Save player count
+            sessionStorage.setItem('gameStarted', 'true');  // Store that the game has started
             location.href = 'game.php';
         }
-
     </script>
 </body>
 

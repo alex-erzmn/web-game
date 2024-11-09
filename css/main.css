@@ -24,7 +24,7 @@
 }
 
 .close-button {
-  background-color: #787ec5; 
+  background-color: #787ec5;
   color: white;
   border: none;
   padding: 15px 30px;
@@ -40,7 +40,7 @@
 .close-button:hover {
   background-color: #696fab;
   transform: scale(1.1);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .sound-container {
@@ -84,14 +84,32 @@
   box-shadow: -5px 0 10px rgba(0, 0, 0, 0.3);
   z-index: 100;
   transition: transform 1s ease, opacity 1s ease;
+  overflow-y: auto;
+  /* Allow vertical scrolling */
   transform: translateX(-100%);
+  -ms-overflow-style: none;
+  /* Hide scrollbar in IE and Edge */
+  scrollbar-width: none;
+  /* Hide scrollbar in Firefox */
 }
+
+/* Optional: If you want to ensure the last element inside has spacing */
+.settings-content:last-child {
+  margin-bottom: 40px;
+}
+
+/* Hide scrollbar for most modern browsers */
+#settings-sidebar::-webkit-scrollbar {
+  display: none;
+}
+
 
 
 .settings-sidebar.active {
   opacity: 1;
   transform: translateX(0);
 }
+
 .sidebar-close-button {
   background-color: #787ec5;
   color: white;
@@ -103,7 +121,8 @@
   margin-top: 10px;
 }
 
-.mute-button, .settings-button {
+.mute-button,
+.settings-button {
   background-color: transparent;
   border: none;
   color: white;
@@ -112,7 +131,8 @@
   transition: color 0.3s;
 }
 
-.mute-button:hover, .settings-button:hover {
+.mute-button:hover,
+.settings-button:hover {
   color: #ff8d47;
 }
 
@@ -154,4 +174,121 @@ body::before {
   100% {
     transform: translateY(-100vh);
   }
+}
+
+
+/* Style for the color selection rectangles */
+.color-selector {
+  width: 20px;
+  height: 20px;
+  margin: 5px;
+  display: inline-block;
+  cursor: pointer;
+
+  align-content: center;
+  /* Adds a border to make the rectangles more visible */
+}
+
+#colorSelectors {
+  display: flex;
+  gap: 10px;
+  align-content: center;
+  justify-content: center;
+  /* Space between color selectors */
+}
+
+/* Style for the color palette */
+.color-palette {
+  display: none;
+  /* Initially hidden */
+  position: absolute;
+  margin-top: 5px;
+  padding: 5px;
+  background: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  display: grid;
+  grid-template-columns: repeat(4, 20px);
+  /* 4 columns */
+  grid-template-rows: repeat(2, 20px);
+  /* 2 rows */
+  gap: 5px;
+}
+
+.color-option {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+/* Style for the controls  */
+
+.control-map {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.player-control {
+  margin-bottom: 10px;
+  padding: 5px;
+  border-radius: 5px;
+  transition: border 0.3s ease;
+}
+
+#player1Control {
+  border: 3px solid #FF0000; /* Default color */
+}
+
+#player2Control {
+  border: 3px solid #00FF00; /* Default color */
+}
+
+#player3Control {
+  border: 3px solid #0000FF; /* Default color */
+}
+
+#player4Control {
+  border: 3px solid #FFFF00; /* Default color */
+}
+
+.control-keys {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.key-row {
+  display: flex;
+  justify-content: center;
+}
+
+.key {
+  display: inline-block;
+  padding: 15px;
+  text-align: center;
+  background-color: #e0e0e0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 20px;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  margin: 5px;
+}
+
+.key:hover {
+  background-color: #ffdd57;
+  cursor: pointer;
+}
+
+/* Special styling for the center key (W, ↑, T, I) */
+.key.center-key {
+  background-color: #e0e0e0;
+  font-weight: bold;
+}
+
+.key.center-key:hover {
+  background-color: #ffdd57;
+  cursor: pointer;
 }

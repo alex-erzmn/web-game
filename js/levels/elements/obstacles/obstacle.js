@@ -1,14 +1,13 @@
-export class Obstacle {
-    constructor(x, y, width, height) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+import { Rectangle } from "../../../gamePhysics/shapes/rectangle.js";
+
+export class Obstacle extends Rectangle {
+    constructor(x, y, width, height, color) {
+        super(x, y, width, height, color);
     }
 
     draw(ctx) {
         ctx.save();
-        ctx.fillStyle = 'black';
+        ctx.fillStyle = this.color;
         ctx.fillRect(this.x, this.y, this.width, this.height);
         ctx.restore();
     }
@@ -20,8 +19,5 @@ export class Obstacle {
             this.y < other.y + other.height &&
             this.y + this.height > other.y
         );
-    }
-    onCollision(player) {
-        return;
     }
 }

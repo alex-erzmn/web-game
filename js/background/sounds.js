@@ -16,6 +16,14 @@ const soundEffects = {
         src: ['assets/sounds/squeeze.mp3'],
         volume: 0.5,
     }),
+    shot: new Howl({
+        src: ['assets/sounds/shot.mp3'],
+        volume: 0.5,
+    }),
+    gotShot: new Howl({
+        src: ['assets/sounds/gotShot.mp3'],
+        volume: 0.5,
+    }),
 };
 
 // Background music

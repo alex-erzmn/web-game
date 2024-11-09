@@ -8,3 +8,5 @@
 <script type="module" src="./js/settings/volume.js"></script>
 <script type="module" src="./js/settings/settings.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+

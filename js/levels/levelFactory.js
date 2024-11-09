@@ -3,9 +3,8 @@ import { Obstacle } from './elements/obstacles/obstacle.js';
 import { MovingObstacle } from './elements/obstacles/movingObstacle.js';
 import { Exit } from './elements/exit.js';
 import { Start } from './elements/start.js';
-import { Enemie } from './elements/enemies/enemie.js';
-import { Item } from './elements/item.js';
-import { Layout } from './layouts/Layout.js';
+import { Enemy } from './elements/enemies/enemy.js';
+import { Item } from './elements/items/item.js';
 
 export class LevelFactory {
     static async loadLevels(url) {
@@ -24,19 +23,14 @@ export class LevelFactory {
             ) || [];
 
             const enemies = levelData.enemies?.map(enemyData =>
-                new Enemie(
-                    { x: enemyData.start?.x || 0, y: enemyData.start?.y || 0 },  // Default start position if undefined
-                    enemyData.shape || 'circle',  // Default shape
-                    enemyData.speed || 1,  // Default speed
-                    enemyData.movement || 'linear',  // Default movement
-                    enemyData.weapon || null  // Default weapon
-                )
+                new Enemy(enemyData.x, enemyData.y)
             ) || [];
 
-            const items = levelData.items?.map(itemData => new Item(itemData.type, itemData.x, itemData.y)) || [];  // Default to an empty array if items are missing
-            const layouts = levelData.layouts?.map(levelData => new Layout()) || [];
+            const items = levelData.items?.map(itemData => 
+                new Item(itemData.x, itemData.y, itemData.type)
+            ) || [];
 
-            return new Level(start, exit, obstacles, enemies, items, layouts); // No separate movingObstacles array
+            return new Level(start, exit, obstacles, enemies, items); // No separate movingObstacles array
         });
     }
 
@@ -44,9 +38,9 @@ export class LevelFactory {
     static createObstacle(data) {
         switch (data.type) {
             case 'Obstacle':
-                return new Obstacle(data.x, data.y, data.width, data.height);
+                return new Obstacle(data.x, data.y, data.width, data.height, data.color);
             case 'MovingObstacle':
-                return new MovingObstacle(data.x, data.y, data.width, data.height, data.speed, data.direction);
+                return new MovingObstacle(data.x, data.y, data.width, data.height, data.color, data.speed, data.direction);
             // Add more cases here for other obstacle types
             default:
                 throw new Error(`Unknown obstacle type: ${data.type}`);

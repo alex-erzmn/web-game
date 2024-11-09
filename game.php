@@ -24,14 +24,23 @@ if (!isset($abs_path)) {
     include $abs_path . '/common/settings.php';
     ?>
 
-    <div class="squares-container"></div> 
+    <div class="squares-container"></div>
 
     <div id="container">
+        <div class="level-overview-container">
+            <div id="level-overview-header">
+                <h2>Levels</h2>
+            </div>
+            <div id="level-overview">
+                <!-- Levels will be dynamically populated here -->
+                <!-- Example for level 1 (current level) and others -->
+            </div>
+        </div>
         <div id="game-container">
             <canvas id="gameCanvas" width="1200" height="700">
                 Canvas is not supported by your browser...
             </canvas>
-            <button class="mainMenu-button" onclick="location.href='index.php'">Main Menu</button>
+            <button class="mainMenu-button" onclick="backToMainMenu()">Main Menu</button>
         </div>
         <div>
             <div id="scoreTable">
@@ -50,6 +59,25 @@ if (!isset($abs_path)) {
             </div>
         </div>
     </div>
+    <script type="module">
+        import { GameController } from './js/gameController.js';
+
+        window.onload = () => {
+            const gameController = new GameController();
+            gameController.startGame();
+        };
+    </script>
+    <script>
+        function backToMainMenu() {
+            sessionStorage.setItem('gameStarted', 'false');  // Store that the game has started
+            sessionStorage.clear('playerColor1')
+            sessionStorage.clear('playerColor1')
+            sessionStorage.clear('playerColor1')
+            sessionStorage.clear('playerColor1')
+
+            location.href = 'index.php';
+        }
+    </script>
 </body>
 
 </html>

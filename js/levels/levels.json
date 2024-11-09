@@ -5,156 +5,167 @@
             "exit": { "x": 1180, "y": 680 },
             "obstacles": [],
             "enemies": [],
-            "items": [],
-            "layout": []
-        },
-        {
-            "start": { "x": 10, "y": 10 },
-            "exit": { "x": 1180, "y": 680 },
-            "obstacles": [
-                { "type": "MovingObstacle", "x": 100, "y": 100, "width": 50, "height": 50, "speed": 4, "direction": "horizontal" },
-                { "type": "MovingObstacle", "x": 300, "y": 200, "width": 50, "height": 50, "speed": 3, "direction": "vertical" },
-                { "type": "MovingObstacle", "x": 600, "y": 100, "width": 50, "height": 50, "speed": 5, "direction": "horizontal" },
-                { "type": "MovingObstacle", "x": 800, "y": 400, "width": 50, "height": 50, "speed": 2, "direction": "vertical" },
-                { "type": "MovingObstacle", "x": 400, "y": 300, "width": 50, "height": 50, "speed": 3, "direction": "horizontal" },
-                { "type": "MovingObstacle", "x": 900, "y": 100, "width": 50, "height": 50, "speed": 4, "direction": "vertical" },
-                { "type": "MovingObstacle", "x": 1000, "y": 250, "width": 50, "height": 50, "speed": 1, "direction": "horizontal" },
-                { "type": "MovingObstacle", "x": 700, "y": 500, "width": 50, "height": 50, "speed": 3, "direction": "vertical" },
-                { "type": "MovingObstacle", "x": 150, "y": 150, "width": 50, "height": 50, "speed": 4, "direction": "horizontal" },
-                { "type": "MovingObstacle", "x": 350, "y": 250, "width": 50, "height": 50, "speed": 3, "direction": "vertical" },
-                { "type": "MovingObstacle", "x": 650, "y": 150, "width": 50, "height": 50, "speed": 5, "direction": "horizontal" },
-                { "type": "MovingObstacle", "x": 850, "y": 450, "width": 50, "height": 50, "speed": 2, "direction": "vertical" },
-                { "type": "MovingObstacle", "x": 450, "y": 350, "width": 50, "height": 50, "speed": 3, "direction": "horizontal" },
-                { "type": "MovingObstacle", "x": 950, "y": 150, "width": 50, "height": 50, "speed": 4, "direction": "vertical" },
-                { "type": "MovingObstacle", "x": 1050, "y": 300, "width": 50, "height": 50, "speed": 1, "direction": "horizontal" },
-                { "type": "MovingObstacle", "x": 750, "y": 500, "width": 50, "height": 50, "speed": 3, "direction": "vertical" }
-            ],
-            "enemies": [],
-            "items": [],
-            "layout": []
-        },
-        {
-            "start": { "x": 10, "y": 10 },
-            "exit": { "x": 1180, "y": 680 },
-            "obstacles": [
-                { "type": "Obstacle", "x": 100, "y": 0, "width": 50, "height": 400 },
-                { "type": "Obstacle", "x": 100, "y": 400, "width": 800, "height": 50 },
-                { "type": "Obstacle", "x": 200, "y": 50, "width": 50, "height": 350 },
-                { "type": "Obstacle", "x": 300, "y": 100, "width": 50, "height": 300 },
-                { "type": "Obstacle", "x": 400, "y": 200, "width": 300, "height": 50 },
-                { "type": "Obstacle", "x": 700, "y": 50, "width": 50, "height": 400 },
-                { "type": "Obstacle", "x": 800, "y": 150, "width": 150, "height": 50 },
-                { "type": "Obstacle", "x": 900, "y": 300, "width": 50, "height": 200 },
-                { "type": "Obstacle", "x": 1000, "y": 100, "width": 50, "height": 500 },
-                { "type": "Obstacle", "x": 1100, "y": 0, "width": 50, "height": 300 }
-            ],
-            "enemies": [],
             "items": [ 
-                { "type": "speedUp", "x": 150, "y": 500 }            
+                { "x": 150, "y": 500, "type": "speed" },
+                { "x": 150, "y": 100, "type": "size" },
+                { "x": 160, "y": 100, "type": "size" },
+                { "x": 170, "y": 100, "type": "size" },
+                { "x": 180, "y": 100, "type": "size" },
+                { "x": 150, "y": 300, "type": "shield" },
+                { "x": 300, "y": 500, "type": "speed" },
+                { "x": 300, "y": 100, "type": "size" },
+                { "x": 300, "y": 300, "type": "shield" }        
+            ]
+        },
+        {
+            "start": { "x": 10, "y": 10 },
+            "exit": { "x": 1180, "y": 680 },
+            "obstacles": [],
+            "enemies": [
+                { "x": 100, "y": 100},
+                { "x": 200, "y": 200},
+                { "x": 300, "y": 300},
+                { "x": 400, "y": 400}
             ],
-            "layout": []
+            "items": []
         },
         {
             "start": { "x": 10, "y": 10 },
             "exit": { "x": 1180, "y": 680 },
             "obstacles": [
-                { "type": "Obstacle", "x": 50, "y": 50, "width": 200, "height": 50 },
-                { "type": "Obstacle", "x": 50, "y": 150, "width": 50, "height": 300 },
-                { "type": "Obstacle", "x": 200, "y": 100, "width": 50, "height": 200 },
-                { "type": "Obstacle", "x": 400, "y": 50, "width": 50, "height": 500 },
-                { "type": "Obstacle", "x": 400, "y": 300, "width": 200, "height": 50 },
-                { "type": "Obstacle", "x": 600, "y": 150, "width": 200, "height": 50 },
-                { "type": "Obstacle", "x": 800, "y": 100, "width": 50, "height": 400 },
-                { "type": "Obstacle", "x": 900, "y": 200, "width": 200, "height": 50 },
-                { "type": "Obstacle", "x": 900, "y": 400, "width": 50, "height": 200 },
-                { "type": "Obstacle", "x": 1100, "y": 100, "width": 50, "height": 500 }
-            ],
-            "enemies": [],
-            "items": [],
-            "layout": []
-        },
-        {
-            "start": { "x": 10, "y": 10 },
-            "exit": { "x": 1180, "y": 680 },
-            "obstacles": [
-                { "type": "Obstacle", "x": 200, "y": 50, "width": 50, "height": 400 },
-                { "type": "Obstacle", "x": 300, "y": 0, "width": 50, "height": 300 },
-                { "type": "Obstacle", "x": 400, "y": 100, "width": 300, "height": 50 },
-                { "type": "Obstacle", "x": 700, "y": 50, "width": 50, "height": 350 },
-                { "type": "Obstacle", "x": 800, "y": 100, "width": 50, "height": 200 },
-                { "type": "Obstacle", "x": 900, "y": 300, "width": 50, "height": 200 },
-                { "type": "Obstacle", "x": 1000, "y": 100, "width": 200, "height": 50 },
-                { "type": "Obstacle", "x": 1000, "y": 200, "width": 50, "height": 500 },
-                { "type": "Obstacle", "x": 1100, "y": 150, "width": 50, "height": 400 },
-                { "type": "Obstacle", "x": 600, "y": 300, "width": 50, "height": 300 }
-            ],
-            "enemies": [],
-            "items": [],
-            "layout": []
-        },
-        {
-            "start": { "x": 10, "y": 10 },
-            "exit": { "x": 1180, "y": 680 },
-            "obstacles": [
-                { "type": "Obstacle", "x": 200, "y": 150, "width": 50, "height": 400 },
-                { "type": "Obstacle", "x": 450, "y": 200, "width": 50, "height": 300 },
-                { "type": "Obstacle", "x": 700, "y": 100, "width": 50, "height": 200 },
-                { "type": "Obstacle", "x": 900, "y": 350, "width": 200, "height": 50 },
-                { "type": "MovingObstacle", "x": 300, "y": 300, "width": 50, "height": 50, "speed": 3, "direction": "horizontal" },
-                { "type": "MovingObstacle", "x": 600, "y": 500, "width": 50, "height": 50, "speed": 2, "direction": "vertical" }
+                { "type": "MovingObstacle", "x": 100, "y": 100, "width": 50, "height": 50, "color": "green", "speed": 4, "direction": { "dx": 4, "dy": 0 } },
+                { "type": "MovingObstacle", "x": 300, "y": 200, "width": 50, "height": 50, "color": "green", "speed": 3, "direction": { "dx": 0, "dy": 3 } },
+                { "type": "MovingObstacle", "x": 600, "y": 100, "width": 50, "height": 50, "color": "green", "speed": 5, "direction": { "dx": 5, "dy": 0 } },
+                { "type": "MovingObstacle", "x": 800, "y": 400, "width": 50, "height": 50, "color": "green", "speed": 2, "direction": { "dx": 0, "dy": 2 } },
+                { "type": "MovingObstacle", "x": 400, "y": 300, "width": 50, "height": 50, "color": "green", "speed": 3, "direction": { "dx": 3, "dy": 0 } },
+                { "type": "MovingObstacle", "x": 900, "y": 100, "width": 50, "height": 50, "color": "green", "speed": 4, "direction": { "dx": 0, "dy": 4 } },
+                { "type": "MovingObstacle", "x": 1000, "y": 250, "width": 50, "height": 50, "color": "green", "speed": 1, "direction": { "dx": 1, "dy": 0 } },
+                { "type": "MovingObstacle", "x": 700, "y": 500, "width": 50, "height": 50, "color": "green", "speed": 3, "direction": { "dx": 0, "dy": 3 } },
+                { "type": "MovingObstacle", "x": 150, "y": 150, "width": 50, "height": 50, "color": "green", "speed": 4, "direction": { "dx": 4, "dy": 0 } },
+                { "type": "MovingObstacle", "x": 350, "y": 250, "width": 50, "height": 50, "color": "green", "speed": 3, "direction": { "dx": 0, "dy": 3 } },
+                { "type": "MovingObstacle", "x": 650, "y": 150, "width": 50, "height": 50, "color": "green", "speed": 5, "direction": { "dx": 5, "dy": 0 } },
+                { "type": "MovingObstacle", "x": 850, "y": 450, "width": 50, "height": 50, "color": "green", "speed": 2, "direction": { "dx": 0, "dy": 2 } },
+                { "type": "MovingObstacle", "x": 450, "y": 350, "width": 50, "height": 50, "color": "green", "speed": 3, "direction": { "dx": 3, "dy": 0 } },
+                { "type": "MovingObstacle", "x": 950, "y": 150, "width": 50, "height": 50, "color": "green", "speed": 4, "direction": { "dx": 0, "dy": 4 } },
+                { "type": "MovingObstacle", "x": 1050, "y": 300, "width": 50, "height": 50, "color": "green", "speed": 1, "direction": { "dx": 1, "dy": 0 } },
+                { "type": "MovingObstacle", "x": 750, "y": 500, "width": 50, "height": 50, "color": "green", "speed": 3, "direction": { "dx": 0, "dy": 3 } }
             ],
             "enemies": [],
-            "items": [],
-            "layout": []
+            "items": []
         },
         {
             "start": { "x": 10, "y": 10 },
             "exit": { "x": 1180, "y": 680 },
             "obstacles": [
-                { "type": "Obstacle", "x": 100, "y": 250, "width": 200, "height": 50 },
-                { "type": "Obstacle", "x": 400, "y": 150, "width": 50, "height": 400 },
-                { "type": "Obstacle", "x": 700, "y": 100, "width": 200, "height": 50 },
-                { "type": "Obstacle", "x": 950, "y": 200, "width": 50, "height": 400 },
-                { "type": "MovingObstacle", "x": 350, "y": 150, "width": 50, "height": 50, "speed": 3, "direction": "horizontal" },
-                { "type": "MovingObstacle", "x": 500, "y": 450, "width": 50, "height": 50, "speed": 4, "direction": "vertical" },
-                { "type": "MovingObstacle", "x": 800, "y": 300, "width": 50, "height": 50, "speed": 5, "direction": "horizontal" }
+                { "type": "Obstacle", "x": 100, "y": 0, "width": 50, "height": 400, "color": "black" },
+                { "type": "Obstacle", "x": 100, "y": 400, "width": 800, "height": 50, "color": "black" },
+                { "type": "Obstacle", "x": 200, "y": 50, "width": 50, "height": 350, "color": "black" },
+                { "type": "Obstacle", "x": 300, "y": 100, "width": 50, "height": 300, "color": "black" },
+                { "type": "Obstacle", "x": 400, "y": 200, "width": 300, "height": 50, "color": "black" },
+                { "type": "Obstacle", "x": 700, "y": 50, "width": 50, "height": 400, "color": "black" },
+                { "type": "Obstacle", "x": 800, "y": 150, "width": 150, "height": 50, "color": "black" },
+                { "type": "Obstacle", "x": 900, "y": 300, "width": 50, "height": 200, "color": "black" },
+                { "type": "Obstacle", "x": 1000, "y": 100, "width": 50, "height": 500, "color": "black" },
+                { "type": "Obstacle", "x": 1100, "y": 0, "width": 50, "height": 300, "color": "black" }
+            ],
+            "enemies": [],
+            "items": []
+        },
+        {
+            "start": { "x": 10, "y": 10 },
+            "exit": { "x": 1180, "y": 680 },
+            "obstacles": [
+                { "type": "Obstacle", "x": 50, "y": 50, "width": 200, "height": 50, "color": "black" },
+                { "type": "Obstacle", "x": 50, "y": 150, "width": 50, "height": 300, "color": "black" },
+                { "type": "Obstacle", "x": 200, "y": 100, "width": 50, "height": 200, "color": "black" },
+                { "type": "Obstacle", "x": 400, "y": 50, "width": 50, "height": 500, "color": "black" },
+                { "type": "Obstacle", "x": 400, "y": 300, "width": 200, "height": 50, "color": "black" },
+                { "type": "Obstacle", "x": 600, "y": 150, "width": 200, "height": 50, "color": "black" },
+                { "type": "Obstacle", "x": 800, "y": 100, "width": 50, "height": 400, "color": "black" },
+                { "type": "Obstacle", "x": 900, "y": 200, "width": 200, "height": 50, "color": "black" },
+                { "type": "Obstacle", "x": 900, "y": 400, "width": 50, "height": 200, "color": "black" },
+                { "type": "Obstacle", "x": 1100, "y": 100, "width": 50, "height": 500, "color": "black" }
+            ],
+            "enemies": [],
+            "items": []
+        },
+        {
+            "start": { "x": 10, "y": 10 },
+            "exit": { "x": 1180, "y": 680 },
+            "obstacles": [
+                { "type": "Obstacle", "x": 200, "y": 50, "width": 50, "height": 400, "color": "black" },
+                { "type": "Obstacle", "x": 300, "y": 0, "width": 50, "height": 300, "color": "black" },
+                { "type": "Obstacle", "x": 400, "y": 100, "width": 300, "height": 50, "color": "black" },
+                { "type": "Obstacle", "x": 700, "y": 50, "width": 50, "height": 350, "color": "black" },
+                { "type": "Obstacle", "x": 800, "y": 100, "width": 50, "height": 200, "color": "black" },
+                { "type": "Obstacle", "x": 900, "y": 300, "width": 50, "height": 200, "color": "black" },
+                { "type": "Obstacle", "x": 1000, "y": 100, "width": 200, "height": 50, "color": "black" },
+                { "type": "Obstacle", "x": 1000, "y": 200, "width": 50, "height": 500, "color": "black" },
+                { "type": "Obstacle", "x": 1100, "y": 150, "width": 50, "height": 400, "color": "black" },
+                { "type": "Obstacle", "x": 600, "y": 300, "width": 50, "height": 300, "color": "black" }
+            ],
+            "enemies": [],
+            "items": []
+        },
+        {
+            "start": { "x": 10, "y": 10 },
+            "exit": { "x": 1180, "y": 680 },
+            "obstacles": [
+                { "type": "Obstacle", "x": 200, "y": 150, "width": 50, "height": 400, "color": "black" },
+                { "type": "Obstacle", "x": 450, "y": 200, "width": 50, "height": 300, "color": "black" },
+                { "type": "Obstacle", "x": 700, "y": 100, "width": 50, "height": 200, "color": "black" },
+                { "type": "Obstacle", "x": 900, "y": 350, "width": 200, "height": 50, "color": "black" },
+                { "type": "MovingObstacle", "x": 300, "y": 300, "width": 50, "height": 50, "color": "green", "speed": 3, "direction": { "dx": 0, "dy": 3 } },
+                { "type": "MovingObstacle", "x": 600, "y": 500, "width": 50, "height": 50, "color": "green", "speed": 2, "direction": { "dx": 0, "dy": 3 } }
+            ],
+            "enemies": [],
+            "items": []
+        },
+        {
+            "start": { "x": 10, "y": 10 },
+            "exit": { "x": 1180, "y": 680 },
+            "obstacles": [
+                { "type": "Obstacle", "x": 100, "y": 250, "width": 200, "height": 50, "color": "black" },
+                { "type": "Obstacle", "x": 400, "y": 150, "width": 50, "height": 400, "color": "black" },
+                { "type": "Obstacle", "x": 700, "y": 100, "width": 200, "height": 50, "color": "black" },
+                { "type": "Obstacle", "x": 950, "y": 200, "width": 50, "height": 400, "color": "black" },
+                { "type": "MovingObstacle", "x": 350, "y": 150, "width": 50, "height": 50, "color": "green", "speed": 3, "direction": { "dx": 0, "dy": 3 } },
+                { "type": "MovingObstacle", "x": 500, "y": 450, "width": 50, "height": 50, "color": "green", "speed": 4, "direction": { "dx": 0, "dy": 3 } },
+                { "type": "MovingObstacle", "x": 800, "y": 300, "width": 50, "height": 50, "color": "green", "speed": 5, "direction": { "dx": 0, "dy": 3 } }
             ],
     
             "enemies": [],
-            "items": [],
-            "layout": []
+            "items": []
         },
         {
             "start": { "x": 10, "y": 10 },
             "exit": { "x": 1180, "y": 680 },
             "obstacles": [
-                { "type": "Obstacle", "x": 200, "y": 100, "width": 50, "height": 500 },
-                { "type": "Obstacle", "x": 450, "y": 200, "width": 300, "height": 50 },
-                { "type": "Obstacle", "x": 750, "y": 100, "width": 50, "height": 300 },
-                { "type": "Obstacle", "x": 1000, "y": 200, "width": 50, "height": 400 },
-                { "type": "MovingObstacle", "x": 600, "y": 300, "width": 50, "height": 50, "speed": 4, "direction": "horizontal" },
-                { "type": "MovingObstacle", "x": 200, "y": 200, "width": 50, "height": 50, "speed": 3, "direction": "vertical" },
-                { "type": "MovingObstacle", "x": 850, "y": 450, "width": 50, "height": 50, "speed": 2, "direction": "horizontal" }
+                { "type": "Obstacle", "x": 200, "y": 100, "width": 50, "height": 500, "color": "black" },
+                { "type": "Obstacle", "x": 450, "y": 200, "width": 300, "height": 50, "color": "black" },
+                { "type": "Obstacle", "x": 750, "y": 100, "width": 50, "height": 300, "color": "black" },
+                { "type": "Obstacle", "x": 1000, "y": 200, "width": 50, "height": 400, "color": "black" },
+                { "type": "MovingObstacle", "x": 600, "y": 300, "width": 50, "height": 50, "color": "green", "speed": 4, "direction": { "dx": 0, "dy": 3 } },
+                { "type": "MovingObstacle", "x": 200, "y": 200, "width": 50, "height": 50, "color": "green", "speed": 3, "direction": { "dx": 0, "dy": 3 } },
+                { "type": "MovingObstacle", "x": 850, "y": 450, "width": 50, "height": 50, "color": "green", "speed": 2, "direction": { "dx": 0, "dy": 3 } }
             ],
             "enemies": [],
-            "items": [],
-            "layout": []
+            "items": []
         },
         {
             "start": { "x": 10, "y": 10 },
             "exit": { "x": 1180, "y": 680 },
             "obstacles": [
-                { "type": "Obstacle", "x": 100, "y": 250, "width": 200, "height": 50 },
-                { "type": "Obstacle", "x": 400, "y": 150, "width": 50, "height": 400 },
-                { "type": "Obstacle", "x": 700, "y": 100, "width": 200, "height": 50 },
-                { "type": "Obstacle", "x": 950, "y": 200, "width": 50, "height": 400 },
-                { "type": "MovingObstacle", "x": 200, "y": 400, "width": 50, "height": 50, "speed": 6, "direction": "horizontal" },
-                { "type": "MovingObstacle", "x": 300, "y": 300, "width": 50, "height": 50, "speed": 5, "direction": "vertical" },
-                { "type": "MovingObstacle", "x": 500, "y": 200, "width": 50, "height": 50, "speed": 4, "direction": "horizontal" }
+                { "type": "Obstacle", "x": 100, "y": 250, "width": 200, "height": 50, "color": "black" },
+                { "type": "Obstacle", "x": 400, "y": 150, "width": 50, "height": 400, "color": "black" },
+                { "type": "Obstacle", "x": 700, "y": 100, "width": 200, "height": 50, "color": "black" },
+                { "type": "Obstacle", "x": 950, "y": 200, "width": 50, "height": 400, "color": "black" },
+                { "type": "MovingObstacle", "x": 200, "y": 400, "width": 50, "height": 50, "color": "green", "speed": 6, "direction": { "dx": 0, "dy": 3 } },
+                { "type": "MovingObstacle", "x": 300, "y": 300, "width": 50, "height": 50, "color": "green", "speed": 5, "direction": { "dx": 0, "dy": 3 } },
+                { "type": "MovingObstacle", "x": 500, "y": 200, "width": 50, "height": 50, "color": "green", "speed": 4, "direction": { "dx": 0, "dy": 3 } }
             ],
             "enemies": [],
-            "items": [],
-            "layout": []
+            "items": []
         }
     ]
 }

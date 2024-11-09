@@ -8,47 +8,96 @@
     <div class="settings-content">
         <h2>Settings</h2>
         <p>
-            Game Mode:
-            <select id="gameMode">
-                <option value="classic">Classic Mode</option>
-                <option value="challenge">Challenge Mode</option>
-                <option value="endless">Endless Mode</option>
-            </select>
+            Player Colors:
+        <div id="colorSelectors">
+            <div id="player1" class="color-selector" style="background-color: #FF0000;"></div>
+            <div id="player2" class="color-selector" style="background-color: #00FF00;"></div>
+            <div id="player3" class="color-selector" style="background-color: #0000FF;"></div>
+            <div id="player4" class="color-selector" style="background-color: #FFFF00;"></div>
+        </div>
+
+        <!-- Color Palette with predefined colors -->
+        <div id="colorPalette" class="color-palette">
+            <!-- Predefined color options -->
+            <div class="color-option" style="background-color: #FF0000;"></div>
+            <div class="color-option" style="background-color: #00FF00;"></div>
+            <div class="color-option" style="background-color: #0000FF;"></div>
+            <div class="color-option" style="background-color: #FFFF00;"></div>
+            <div class="color-option" style="background-color: #FF00FF;"></div>
+            <div class="color-option" style="background-color: #00FFFF;"></div>
+            <div class="color-option" style="background-color: #FFA500;"></div>
+            <div class="color-option" style="background-color: #808080;"></div>
+            <div class="color-option" style="background-color: #88FFFF;"></div>
+            <div class="color-option" style="background-color: #AAA500;"></div>
+            <div class="color-option" style="background-color: #000000;"></div>
+        </div>
         </p>
+
         <p>
-            Game Speed:
-            <select id="gameSpeed">
-                <option value="slow">Slow</option>
-                <option value="normal" selected>Normal</option>
-                <option value="fast">Fast</option>
-            </select>
-        </p>
-        <p>
-            Show Instructions: <input type="checkbox" id="showInstructions" checked>
-        </p>
-        <p>
-            Background Theme:
-            <select id="backgroundTheme">
-                <option value="default">Default</option>
-                <option value="dark">Dark Theme</option>
-                <option value="light">Light Theme</option>
-            </select>
-        </p>
-        <p>
-            Enable Animations: <input type="checkbox" id="enableAnimations" checked>
-        </p>
-        <p>
-            Difficulty Level:
-            <select id="difficultyLevel">
-                <option value="easy">Easy</option>
-                <option value="medium" selected>Medium</option>
-                <option value="hard">Hard</option>
-            </select>
+            Enable background animation: <input type="checkbox" id="enableAnimations" checked>
         </p>
     </div>
+
+    <!-- Player control section -->
+    <div class="settings-content">
+        <h2>Player Controls</h2>
+        <div class="control-map">
+            <div class="player-control" id="player1Control">
+                <div class="control-keys">
+                    <div class="key-row">
+                        <span class="key center-key">W</span>
+                    </div>
+                    <div class="key-row">
+                        <span class="key">A</span>
+                        <span class="key">S</span>
+                        <span class="key">D</span>
+                    </div>
+                </div>
+            </div>
+            <div class="player-control" id="player2Control">
+                <div class="control-keys">
+                    <div class="key-row">
+                        <span class="key center-key">&#8593;</span>
+                    </div>
+                    <div class="key-row">
+                        <span class="key">&#8592;</span>
+                        <span class="key">&#8595;</span>
+                        <span class="key">&#8594;</span>
+                    </div>
+                </div>
+            </div>
+            <div class="player-control" id="player3Control">
+                <div class="control-keys">
+                    <div class="key-row">
+                        <span class="key center-key">T</span>
+                    </div>
+                    <div class="key-row">
+                        <span class="key">F</span>
+                        <span class="key">G</span>
+                        <span class="key">H</span>
+                    </div>
+                </div>
+            </div>
+            <div class="player-control" id="player4Control">
+                <div class="control-keys">
+                    <div class="key-row">
+                        <span class="key center-key">I</span>
+                    </div>
+                    <div class="key-row">
+                        <span class="key">J</span>
+                        <span class="key">K</span>
+                        <span class="key">L</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="settings-content">
         <h2>Credits</h2>
         <p>Created by <strong>Alexander ERZMANN</strong></p>
+        <p>Music recommended by <strong>Yeji LEE</strong></p>
     </div>
 </div>
 
