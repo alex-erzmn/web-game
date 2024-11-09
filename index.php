@@ -73,15 +73,13 @@ if (!isset($abs_path)) {
     <script type="module">
         import { Sounds } from './js/background/sounds.js';
 
-        let musicPlaying = false; // Flag to track if music is playing
-
+        let musicPlaying = false;
 
         document.querySelectorAll('input[name="players"]').forEach((radio) => {
             radio.addEventListener('change', (event) => {
-                // Play music only if it's not already playing
                 if (!musicPlaying) {
-                    Sounds.backgroundMusic.mainBackgroundMusic.play(); // Start the background music
-                    musicPlaying = true; // Set the flag to true
+                    Sounds.backgroundMusic.mainBackgroundMusic.play();
+                    musicPlaying = true;
                 }
             });
         });
@@ -92,7 +90,7 @@ if (!isset($abs_path)) {
             if (!selectedPlayers) {
                 return;
             }
-            sessionStorage.setItem('playerCount', selectedPlayers.value);  // Save player count
+            sessionStorage.setItem('playerCount', selectedPlayers.value);  // Save player count for creating players
             sessionStorage.setItem('gameStarted', 'true');  // Store that the game has started
             location.href = 'game.php';
         }

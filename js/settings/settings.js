@@ -1,18 +1,24 @@
 document.addEventListener("DOMContentLoaded", function () {
+
+    // ---------- Openning the settings sidebar ----------
+
     const settingsButton = document.getElementById('settingsButton');
     const settingsSidebar = document.getElementById('settingsSidebar');
-    const colorPalette = document.getElementById('colorPalette');
-    const playerColors = { player1: "#FF0000", player2: "#00FF00", player3: "#0000FF", player4: "#FFFF00" }; // Default colors
-    let currentPlayer = null;
 
-    // Toggle the settings sidebar
     settingsButton.onclick = function () {
-        settingsSidebar.classList.toggle('active'); // Toggle sidebar visibility
-        settingsButton.classList.toggle('active');  // Shift button when sidebar is open
+        settingsSidebar.classList.toggle('active');
+        settingsButton.classList.toggle('active');
     };
 
-    const gameStarted = sessionStorage.getItem('gameStarted') === 'true';
+  
+    // ---------- Settings for changing the player colors ----------
 
+    const colorPalette = document.getElementById('colorPalette');
+    const gameStarted = sessionStorage.getItem('gameStarted') === 'true';
+    const playerColors = { player1: "#FF0000", player2: "#00FF00", player3: "#0000FF", player4: "#FFFF00" };
+    let currentPlayer = null;
+
+    // Manage enable / disable color selection depending on game status
     document.querySelectorAll('.color-selector').forEach(rect => {
         if (gameStarted) {
             // If game started, disable color selectors
@@ -25,10 +31,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Rest of the color selection code
+    // Manage opening color palette
     document.querySelectorAll('.color-selector').forEach((rect) => {
         rect.addEventListener('click', (event) => {
-            if (gameStarted) return; // Prevent opening color palette if game has started
+            if (gameStarted) return;
 
             currentPlayer = rect;
             const rectBounds = rect.getBoundingClientRect();
@@ -41,14 +47,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Update color palette to show only colors not currently chosen by other players
     function updateColorPalette(currentPlayerId) {
-        // Collect all chosen colors except the current player's color
         const chosenColors = Object.values(playerColors).filter(color => color !== playerColors[currentPlayerId]);
 
-        // Iterate through each color option in the palette
         document.querySelectorAll('.color-option').forEach(option => {
             const color = rgbToHex(option.style.backgroundColor);
 
-            // Show option if it's not chosen by another player, otherwise hide it
             if (chosenColors.includes(color)) {
                 option.style.display = 'none';
             } else {
@@ -62,18 +65,13 @@ document.addEventListener("DOMContentLoaded", function () {
         colorOption.addEventListener('click', () => {
             const selectedColor = colorOption.style.backgroundColor;
             if (currentPlayer) {
-                // Update the color for the current player and the UI element
                 currentPlayer.style.backgroundColor = selectedColor;
-                const playerId = currentPlayer.id; // e.g., "player1", "player2", etc.
-                playerColors[playerId] = rgbToHex(selectedColor); // Store the new color
+                const playerId = currentPlayer.id; 
+                playerColors[playerId] = rgbToHex(selectedColor); 
 
-                // Save the new color in sessionStorage for persistence
                 sessionStorage.setItem(`playerColor${playerId.charAt(playerId.length - 1)}`, rgbToHex(selectedColor));
-
-                // Apply the new color to the player's control section border
                 document.getElementById(`${playerId}Control`).style.borderColor = rgbToHex(selectedColor);
             }
-            // Hide the color palette after a selection is made
             colorPalette.style.display = 'none';
         });
     });
@@ -97,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (savedColor) {
             playerColors[playerId] = savedColor;
             document.getElementById(playerId).style.backgroundColor = savedColor;
-            // Also update the border color
+            // Also update the border color for controls
             document.getElementById(`${playerId}Control`).style.borderColor = savedColor;
         }
     });

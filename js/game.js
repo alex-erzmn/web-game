@@ -14,11 +14,10 @@ export class Game {
         this.ctx = this.canvas.getContext('2d');
         this.canvasWidth = this.canvas.width;
         this.canvasHeight = this.canvas.height;
-        this.then = new Date().getTime();
 
+        // Game
+        this.then = new Date().getTime();
         this.gameRunning = false;
-        this.overlapBuffer = 30;
-        this.framesSinceStart = 0;
 
         // Managers
         this.playerManager = new PlayerManager(this);
@@ -29,10 +28,6 @@ export class Game {
         this.playerManager.initializePlayers();
         this.evaluationManager.updateScoreTable();
         this.levelManager.initializeLevels();
-    }
-
-    getCollisionManager() {
-        return this.collisionManager;
     }
 
     getCanvas() {
@@ -129,18 +124,9 @@ export class Game {
     }
 
     update(delta) {
-        this.framesSinceStart++;
-
-
-        
+        // TODO: Use delta to ensure the same behavior in case of lower fps! (speed * delta) / 1000; 
         this.levelManager.updateLevel();
         this.playerManager.updatePlayers();
-        
-        // TODO: Use this to ensure even with lower FPS the speed of objects remains the same
-
-        //calcDistanceToMove(delta, speed) {
-        //    return (speed * delta) / 1000; 
-        //}
 
         this.evaluationManager.updateScoreTable();
     }

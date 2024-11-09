@@ -17,10 +17,4 @@ export class GameController {
             this.gameInstance.start();
         }
     }
-
-    resetGame() {
-        if (this.gameInstance) {
-            this.gameInstance.reset();
-        }
-    }
 }

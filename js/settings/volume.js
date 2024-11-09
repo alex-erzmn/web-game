@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", function () {
     muteMusicButton.innerHTML = isMusicMuted ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fas fa-music"></i>';
     muteSoundButton.innerHTML = isSoundMuted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
 
-    // Apply initial mute states to the sounds
     for (const sound in backgroundMusic) {
         backgroundMusic[sound].mute(isMusicMuted);
     }
@@ -22,7 +21,6 @@ document.addEventListener("DOMContentLoaded", function () {
         soundEffects[sound].mute(isSoundMuted);
     }
 
-    // Add event listener for mute music button
     muteMusicButton.addEventListener("click", function () {
         isMusicMuted = !isMusicMuted;
         muteMusicButton.innerHTML = isMusicMuted ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fas fa-music"></i>';
@@ -31,11 +29,9 @@ document.addEventListener("DOMContentLoaded", function () {
             backgroundMusic[sound].mute(isMusicMuted);
         }
 
-        // Save the updated state to sessionStorage
         sessionStorage.setItem("isMusicMuted", isMusicMuted);
     });
 
-    // Add event listener for mute sound button
     muteSoundButton.addEventListener("click", function () {
         isSoundMuted = !isSoundMuted;
         muteSoundButton.innerHTML = isSoundMuted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
@@ -43,8 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
         for (const sound in soundEffects) {
             soundEffects[sound].mute(isSoundMuted);
         }
-
-        // Save the updated state to sessionStorage
+        
         sessionStorage.setItem("isSoundMuted", isSoundMuted);
     });
 });

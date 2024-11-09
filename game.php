@@ -33,7 +33,6 @@ if (!isset($abs_path)) {
             </div>
             <div id="level-overview">
                 <!-- Levels will be dynamically populated here -->
-                <!-- Example for level 1 (current level) and others -->
             </div>
         </div>
         <div id="game-container">
@@ -69,7 +68,7 @@ if (!isset($abs_path)) {
     </script>
     <script>
         function backToMainMenu() {
-            sessionStorage.setItem('gameStarted', 'false');  // Store that the game has started
+            sessionStorage.setItem('gameStarted', 'false');  // Store that game has no longer started
             sessionStorage.clear('playerColor1')
             sessionStorage.clear('playerColor1')
             sessionStorage.clear('playerColor1')
