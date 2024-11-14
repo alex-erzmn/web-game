@@ -1,7 +1,7 @@
 body {
   font-family: Arial, sans-serif;
-  background-color: #282c34;
-  color: rgb(0, 0, 0);
+  background-color: var(--background-color);
+  color: var(--alternative-text-color);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -34,21 +34,21 @@ body {
 }
 
 canvas {
-  border: 4px solid #787ec5;
-  border-radius: 12px; /* Rounded corners */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Soft shadow */
+  border: 4px solid var(--purple);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
   display: block;
-  background-color: rgba(255, 255, 255, 1);
-  width: calc(100% - 8px); /* Reduce width by border size */
-  height: calc(100% - 8px); /* Reduce height by border size */
-  box-sizing: border-box; /* Ensure padding/borders are included in total size */
+  background-color: var(--canvas-background-color);
+  width: calc(100% - 8px);
+  height: calc(100% - 8px);
+  box-sizing: border-box;
 }
 
 #scoreTable {
-  border: 4px solid #787ec5;
+  border: 4px solid var(--purple);
   text-align: left;
   font-size: 18px;
-  background-color: rgba(255, 255, 255, 1);
+  background-color: var(--canvas-background-color);
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   padding: 20px;
@@ -58,11 +58,11 @@ canvas {
 #scoreTable h2 {
   text-align: center;
   margin-bottom: 10px;
-  color: #282c34;
+  color: var(--background-color);
 }
 
 #scoreTable tr:nth-child(even) {
-  background-color: #787ec5;
+  background-color: var(--purple);
 }
 
 table {
@@ -71,81 +71,78 @@ table {
 }
 
 th {
-  background-color: #787ec5;
-  color: white;
+  background-color: var(--purple);
+  color: var(--text-color);
   padding: 10px;
-  border-bottom: 2px solid #696fab;
+  border-bottom: 2px solid var(--dark_purple);
 }
 
 td {
   background-color: rgba(255, 255, 255, 0.8);
   padding: 10px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--table-border);
 }
 
 .level-overview-container {
-  border: 4px solid #787ec5;
+  border: 4px solid var(--purple);
   padding: 20px;
   font-size: 18px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  background-color: rgba(255, 255, 255, 1);
+  background-color: var(--canvas-background-color);
   border-radius: 10px;
-  width: 180px;  /* Adjust the width based on your design */
-  height: 400px; /* Set a fixed height for the scrollable container */
+  width: 180px;
+  height: 400px;
   display: flex;
-  flex-direction: column; /* Stack header and levels vertically */
+  flex-direction: column;
 }
 
 #level-overview-header {
-  /* Style for the header */
-  background-color: #fff;
+  background-color: var(--canvas-background-color);
   font-size: 18px;
   font-weight: bold;
-  z-index: 1; /* Ensure header stays on top */
+  z-index: 1;
 }
 
 #level-overview {
-  flex-grow: 1; /* Allow the levels container to take up available space */
+  flex-grow: 1;
   padding: 0px 10px;
-  overflow-y: auto; /* Allow scrolling for levels */
-  -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
-  scrollbar-width: none; /* Hide scrollbar in Firefox */
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* Hide scrollbar for most modern browsers */
 #level-overview::-webkit-scrollbar {
   display: none;
 }
 
 .level {
-  display: flex; /* Align items in a row */
-  justify-content: space-between; /* Space out text and icon */
-  align-items: center; /* Vertically align items */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin: 5px 0;
   padding: 8px;
-  color: white;
-  background-color: #787ec5;
+  color: var(--text-color);
+  background-color: var(--purple);
   border-radius: 4px;
 }
 
 #current-level {
   text-align: left;
-  background-color: #ff8d47; /* Highlight color for current level */
+  background-color: var(--orange);
   font-weight: bold;
-  color: white;
+  color: var(--text-color);
 }
 
 .fog-icon {
-  margin-left: auto; /* Ensure it aligns to the right */
+  margin-left: auto;
 }
-
 
 tr:hover td {
   background-color: rgba(121, 126, 197, 0.3);
 }
 .mainMenu-button {
-  background-color: #787ec5;
-  color: white;
+  background-color: var(--purple);
+  color: var(--text-color);
   border: none;
   border-radius: 10px;
   padding: 15px 30px;
@@ -158,7 +155,7 @@ tr:hover td {
 }
 
 .mainMenu-button:hover {
-  background-color: #696fab;
+  background-color: var(--dark_purple);
   transform: scale(1.1);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); 
 }

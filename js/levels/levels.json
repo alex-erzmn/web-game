@@ -21,15 +21,15 @@
                 { "type": "MovingObstacle", "x": 300, "y": 200, "dx": 0, "dy": 3, "width": 50, "height": 50, "color": "green"}
             ],
             "enemies": [
-                { "x": 100, "y": 100, "projectileType": "projectile"},
-                { "x": 200, "y": 200, "projectileType": "projectile"},
-                { "x": 300, "y": 300, "projectileType": "projectile"},
-                { "x": 400, "y": 400, "projectileType": "projectile"}
+                { "type": "Projectile", "x": 100, "y": 100 },
+                { "type": "Projectile", "x": 200, "y": 200 },
+                { "type": "Projectile", "x": 300, "y": 300 },
+                { "type": "Projectile", "x": 400, "y": 400 }
             ],
             "items": [ 
-                { "x": 180, "y": 100, "type": "size" },
-                { "x": 150, "y": 300, "type": "shield" },
-                { "x": 300, "y": 500, "type": "speed" }     
+                { "type": "Size", "x": 180, "y": 100 },
+                { "type": "Shield", "x": 150, "y": 300 },
+                { "type": "Speed", "x": 300, "y": 500}     
             ],
             "fog": false 
         },
@@ -38,7 +38,7 @@
             "exit": { "x": 1180, "y": 680 },
             "obstacles": [],
             "enemies": [
-                { "x": 100, "y": 100, "projectileType": "missile"}
+                { "type": "Missile", "x": 100, "y": 100 }
             ],
             "items": [],
             "fog": false 
@@ -115,7 +115,7 @@
             ],
             "enemies": [],
             "items": [ 
-                { "x": 125, "y": 25, "type": "size" }
+                { "type": "Size", "x": 125, "y": 25 }
             ],
             "fog": false 
         },
@@ -162,10 +162,7 @@
                 { "type": "Obstacle", "x": 1050, "y": 650, "width": 100, "height": 50, "color": "black" }
             ],
             "enemies": [],
-            "items": [ 
-                { "x": 1025, "y": 175, "type": "speed" },
-                { "x": 325, "y": 675, "type": "speed" }       
-            ],
+            "items": [],
             "fog": false 
         },
         {
@@ -265,17 +262,7 @@
             "exit": { "x": 1180, "y": 680 },
             "obstacles": [],
             "enemies": [],
-            "items": [ 
-                { "x": 150, "y": 500, "type": "speed" },
-                { "x": 150, "y": 100, "type": "size" },
-                { "x": 160, "y": 100, "type": "size" },
-                { "x": 170, "y": 100, "type": "size" },
-                { "x": 180, "y": 100, "type": "size" },
-                { "x": 150, "y": 300, "type": "shield" },
-                { "x": 300, "y": 500, "type": "speed" },
-                { "x": 300, "y": 100, "type": "size" },
-                { "x": 300, "y": 300, "type": "shield" }        
-            ],
+            "items": [],
             "fog": false 
         },
         {
@@ -283,10 +270,10 @@
             "exit": { "x": 1180, "y": 680 },
             "obstacles": [],
             "enemies": [
-                { "x": 100, "y": 100, "projectileType": "projectile"},
-                { "x": 200, "y": 200, "projectileType": "projectile"},
-                { "x": 300, "y": 300, "projectileType": "projectile"},
-                { "x": 400, "y": 400, "projectileType": "projectile"}
+                { "type": "Projectile", "x": 100, "y": 100 },
+                { "type": "Projectile", "x": 200, "y": 200 },
+                { "type": "Projectile", "x": 300, "y": 300 },
+                { "type": "Projectile", "x": 400, "y": 400 }
             ],
             "items": [],
             "fog": false

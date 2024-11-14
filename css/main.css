@@ -1,3 +1,31 @@
+:root {
+  /* Player Colors */
+  --player_color_1: #FF0000;
+  --player_color_2: #00FF00;
+  --player_color_3: #0000FF;
+  --player_color_4: #ffdc40;
+  --player_color_5: #FF00FF;
+  --player_color_6: #00FFFF;
+  --player_color_7: #FFA500;
+  --player_color_8: #802d2d;
+  --player_color_9: #9cff62;
+  --player_color_10: #a46efc;
+  --player_color_11: #4ba8ff;
+
+  /* Background Colors */
+  --text-color: #ffffff;
+  --settings-color: #ffffff;
+  --alternative-text-color: #000000;
+  --background-color: #282c34;
+  --canvas-background-color: #ffffff;
+  --table-border: #ddd;
+  --index_green: #7ac38b;
+  --dark_orange: #d27338;
+  --orange: #ff8d47;
+  --dark_purple: #696fab;
+  --purple: #787ec5;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -12,8 +40,8 @@
 /* ----- Settings ----- */
 
 .settings-content {
-  background-color: #ffffff;
-  color: #000000;
+  background-color: var(--settings-color);
+  color: var(--alternative-text-color);
   padding: 8px;
   border-radius: 8px;
   margin: 10px;
@@ -23,22 +51,8 @@
   text-align: center;
 }
 
-.close-button {
-  background-color: #787ec5;
-  color: white;
-  border: none;
-  padding: 15px 30px;
-  border-radius: 10px;
-  margin: 10px;
-  font-size: 1.5em;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
-  z-index: 1;
-  position: relative;
-}
-
 .close-button:hover {
-  background-color: #696fab;
+  background-color: var(--dark_purple);
   transform: scale(1.1);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
@@ -79,53 +93,35 @@
   width: 300px;
   height: 100%;
   background: rgba(77, 76, 76, 0.8);
-  color: #ffffff;
+  color: var(--text-color);
   padding: 20px;
   box-shadow: -5px 0 10px rgba(0, 0, 0, 0.3);
   z-index: 100;
   transition: transform 1s ease, opacity 1s ease;
   overflow-y: auto;
-  /* Allow vertical scrolling */
   transform: translateX(-100%);
   -ms-overflow-style: none;
-  /* Hide scrollbar in IE and Edge */
   scrollbar-width: none;
-  /* Hide scrollbar in Firefox */
 }
 
-/* Optional: If you want to ensure the last element inside has spacing */
 .settings-content:last-child {
   margin-bottom: 40px;
 }
 
-/* Hide scrollbar for most modern browsers */
 #settings-sidebar::-webkit-scrollbar {
   display: none;
 }
-
-
 
 .settings-sidebar.active {
   opacity: 1;
   transform: translateX(0);
 }
 
-.sidebar-close-button {
-  background-color: #787ec5;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-size: 1em;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
 .mute-button,
 .settings-button {
   background-color: transparent;
   border: none;
-  color: white;
+  color: var(--text-color);
   font-size: 1.5em;
   cursor: pointer;
   transition: color 0.3s;
@@ -133,7 +129,7 @@
 
 .mute-button:hover,
 .settings-button:hover {
-  color: #ff8d47;
+  color: var(--orange);
 }
 
 /* ----- Background Animation ----- */
@@ -176,17 +172,13 @@ body::before {
   }
 }
 
-
-/* Style for the color selection rectangles */
 .color-selector {
   width: 20px;
   height: 20px;
   margin: 5px;
   display: inline-block;
   cursor: pointer;
-
   align-content: center;
-  /* Adds a border to make the rectangles more visible */
 }
 
 #colorSelectors {
@@ -194,24 +186,19 @@ body::before {
   gap: 10px;
   align-content: center;
   justify-content: center;
-  /* Space between color selectors */
 }
 
-/* Style for the color palette */
 .color-palette {
   display: none;
-  /* Initially hidden */
   position: absolute;
   margin-top: 5px;
   padding: 5px;
-  background: #fff;
-  border: 1px solid #ddd;
+  background: var(--canvas-background-color);
+  border: 1px solid var(--table-border);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   display: grid;
   grid-template-columns: repeat(4, 20px);
-  /* 4 columns */
   grid-template-rows: repeat(2, 20px);
-  /* 2 rows */
   gap: 5px;
 }
 
@@ -220,8 +207,6 @@ body::before {
   height: 20px;
   cursor: pointer;
 }
-
-/* Style for the controls  */
 
 .control-map {
   display: flex;
@@ -237,19 +222,19 @@ body::before {
 }
 
 #player1Control {
-  border: 3px solid #FF0000; /* Default color */
+  border: 3px solid var(--player_color_1);
 }
 
 #player2Control {
-  border: 3px solid #00FF00; /* Default color */
+  border: 3px solid var(--player_color_2);
 }
 
 #player3Control {
-  border: 3px solid #0000FF; /* Default color */
+  border: 3px solid var(--player_color_3);
 }
 
 #player4Control {
-  border: 3px solid #FFFF00; /* Default color */
+  border: 3px solid var(--player_color_4);
 }
 
 .control-keys {
@@ -278,27 +263,16 @@ body::before {
 }
 
 .key:hover {
-  background-color: #ffdd57;
-  cursor: pointer;
-}
-
-/* Special styling for the center key (W, ↑, T, I) */
-.key.center-key {
-  background-color: #e0e0e0;
-  font-weight: bold;
-}
-
-.key.center-key:hover {
-  background-color: #ffdd57;
+  background-color: var(--orange);
   cursor: pointer;
 }
 
 #fps-container {
-  position: absolute; /* Position it relative to the nearest positioned ancestor (body in this case) */
-  bottom: 20px; /* 20px from the bottom */
-  left: 20px; /* 20px from the left */
-  color: white; /* White text color */
-  z-index: 10; /* Ensures it's visible on top of other elements */
-  font-size: 16px; /* Adjust the font size for better visibility */
-  padding: 5px; /* Optional: add some padding for better readability */
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: var(--text-color);
+  z-index: 10;
+  font-size: 16px;
+  padding: 5px;
 }

@@ -10,13 +10,13 @@ export class WindParticle {
     update() {
         this.x += this.dx;
         this.y += this.dy;
-        this.opacity -= 0.02; // Fade out over time
+        this.opacity -= 0.02; 
     }
 
     draw(ctx) {
-        ctx.fillStyle = `rgba(173, 216, 230, ${this.opacity})`; // Light blue with opacity
+        ctx.fillStyle = `rgba(173, 216, 230, ${this.opacity})`; 
         ctx.beginPath();
-        ctx.arc(this.x, this.y, 2, 0, Math.PI * 2); // Small circle for particle
+        ctx.arc(this.x, this.y, 2, 0, Math.PI * 2); 
         ctx.fill();
     }
 

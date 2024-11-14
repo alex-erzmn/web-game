@@ -239,7 +239,7 @@ export class CollisionManager {
         let items = this.game.getItems();
         items.forEach(item => {
             if (CollisionDetection.checkCollision(player, item)) {
-                player.activatePowerUp(item.type);
+                player.activatePowerUp(item);
                 this.game.removeItem(item);
             }
         });
@@ -255,19 +255,11 @@ export class CollisionManager {
         const finishedPlayers = this.game.getFinishedPlayers();
         if (CollisionDetection.checkCollision(player, exit) && !finishedPlayers.has(player)) {
             player.points += 4 - finishedPlayers.size;
-            this.game.evaluationManager.updateScoreTable();
             finishedPlayers.add(player);
             player.finished = true;
             Sounds.soundEffects.goalReached.play();
         }
     }
-
-
-
-
-
-
-
 
     #checkPlayerWithMovingObstacle(player, movingObstacles, canvas, obstacles, start) {
         let playerReset = false;
@@ -582,16 +574,19 @@ export class CollisionManager {
     }
 
     #checkMovingObstacleWithBoundariesCollisions(movingObstacle, canvas) {
-        if (movingObstacle.x <= 0 || movingObstacle.x + movingObstacle.width >= canvas.width) {
-            // Horizontal boundary collision, invert dx
-            movingObstacle.dx = -movingObstacle.dx;
-            Sounds.soundEffects.collision.play();
-        }
+        if (CollisionDetection.checkCollision(movingObstacle, canvas)) {
+            // Determine which boundary the moving obstacle collided with
+            if (movingObstacle.x <= 0 || movingObstacle.x + movingObstacle.width >= canvas.width) {
+                // Horizontal boundary collision, invert dx
+                movingObstacle.dx = -movingObstacle.dx;
+                Sounds.soundEffects.collision.play();
+            }
 
-        if (movingObstacle.y <= 0 || movingObstacle.y + movingObstacle.height >= canvas.height) {
-            // Vertical boundary collision, invert dy
-            movingObstacle.dy = -movingObstacle.dy;
-            Sounds.soundEffects.collision.play();
+            if (movingObstacle.y <= 0 || movingObstacle.y + movingObstacle.height >= canvas.height) {
+                // Vertical boundary collision, invert dy
+                movingObstacle.dy = -movingObstacle.dy;
+                Sounds.soundEffects.collision.play();
+            }
         }
     }
 
@@ -615,38 +610,5 @@ export class CollisionManager {
                 Sounds.soundEffects.collision.play();
             }
         });
-    }
-}
-
-
-class Particle {
-    constructor(x, y, dx, dy, size, life) {
-        this.x = x;
-        this.y = y;
-        this.dx = dx;
-        this.dy = dy;
-        this.size = size;
-        this.life = life;
-    }
-
-    update() {
-        // Update position based on speed
-        this.x += this.dx;
-        this.y += this.dy;
-
-        // Reduce life with each frame
-        this.life -= 1;
-    }
-
-    draw(context) {
-        context.beginPath();
-        context.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        context.fillStyle = "rgba(255, 165, 0, 0.7)";  // Orange color with transparency
-        context.fill();
-        context.closePath();
-    }
-
-    isAlive() {
-        return this.life > 0;
     }
 }

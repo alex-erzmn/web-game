@@ -45,7 +45,7 @@
             <div class="player-control" id="player1Control">
                 <div class="control-keys">
                     <div class="key-row">
-                        <span class="key center-key">W</span>
+                        <span class="key">W</span>
                     </div>
                     <div class="key-row">
                         <span class="key">A</span>
@@ -57,7 +57,7 @@
             <div class="player-control" id="player2Control">
                 <div class="control-keys">
                     <div class="key-row">
-                        <span class="key center-key">&#8593;</span>
+                        <span class="key">&#8593;</span>
                     </div>
                     <div class="key-row">
                         <span class="key">&#8592;</span>
@@ -69,7 +69,7 @@
             <div class="player-control" id="player3Control">
                 <div class="control-keys">
                     <div class="key-row">
-                        <span class="key center-key">T</span>
+                        <span class="key">T</span>
                     </div>
                     <div class="key-row">
                         <span class="key">F</span>
@@ -81,7 +81,7 @@
             <div class="player-control" id="player4Control">
                 <div class="control-keys">
                     <div class="key-row">
-                        <span class="key center-key">I</span>
+                        <span class="key">I</span>
                     </div>
                     <div class="key-row">
                         <span class="key">J</span>

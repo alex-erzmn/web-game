@@ -11,13 +11,4 @@ export class Obstacle extends Rectangle {
         ctx.fillRect(this.x, this.y, this.width, this.height);
         ctx.restore();
     }
-
-    collidesWith(other) {
-        return (
-            this.x < other.x + other.width &&
-            this.x + this.width > other.x &&
-            this.y < other.y + other.height &&
-            this.y + this.height > other.y
-        );
-    }
 }

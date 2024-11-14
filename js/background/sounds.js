@@ -1,4 +1,3 @@
-// Initialize sound effects in an object
 const soundEffects = {
     collision: new Howl({
         src: ['assets/sounds/collision.mp3'],
@@ -26,7 +25,6 @@ const soundEffects = {
     }),
 };
 
-// Background music
 const backgroundMusic = {
     gameBackgroundMusic: new Howl({
         src: ['assets/audio/background.mp3'],
@@ -40,7 +38,6 @@ const backgroundMusic = {
     })
 };
 
-// Export sound instances
 export const Sounds = {
     backgroundMusic: backgroundMusic,
     soundEffects: soundEffects,

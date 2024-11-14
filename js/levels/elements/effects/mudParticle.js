@@ -2,27 +2,23 @@ export class MudParticle {
     constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.size = 2 + Math.random() * 3; // Small random size
-        this.alpha = 0.8; // Starting opacity
-        this.lifeSpan = 60 + Math.random() * 30; // Lifespan of the particle
+        this.size = 2 + Math.random() * 3; 
+        this.alpha = 0.8; 
+        this.lifeSpan = 60 + Math.random() * 30; 
         this.age = 0;
-        this.color = 'rgba(139, 69, 19, '; // Brown color base
+        this.color = 'rgba(139, 69, 19, '; 
 
-        // Random movement to simulate slow spreading mud
         this.dx = (Math.random() - 0.5) * 0.5;
         this.dy = (Math.random() - 0.5) * 0.5;
     }
 
     update() {
-        // Update position
         this.x += this.dx;
         this.y += this.dy;
 
-        // Update opacity and lifespan
-        this.alpha = Math.max(0, this.alpha - 0.01); // Fade out slowly
+        this.alpha = Math.max(0, this.alpha - 0.01); 
         this.age++;
 
-        // Mark particle as expired after its lifespan
         this.isExpired = this.age > this.lifeSpan;
     }
 

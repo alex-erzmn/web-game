@@ -24,7 +24,6 @@ export class CollisionDetection {
         throw new Error("Unsupported shape types for collision detection.");
     }
 
-    // Helper methods for each shape collision type
     static #rectangleRectangleCollision(rectA, rectB) {
         return (
             rectA.x < rectB.x + rectB.width &&

@@ -4,11 +4,16 @@ import { MovingObstacle } from './elements/obstacles/movingObstacle.js';
 import { Exit } from './elements/exit.js';
 import { Start } from './elements/start.js';
 import { Enemy } from './elements/enemies/enemy.js';
-import { Item } from './elements/items/item.js';
+import { ShieldItem } from "./elements/items/shieldItem.js";
+import { SizeItem } from "./elements/items/sizeItem.js";
+import { SpeedItem } from "./elements/items/speedItem.js";
 import { Wind } from './elements/effects/wind.js';
 import { Mud } from './elements/effects/mud.js';
 import { Inverter } from './elements/effects/inverter.js';
 
+/**
+ * Factory class to create levels from JSON data
+ */
 export class LevelFactory {
     static async loadLevels(url) {
         const response = await fetch(url);
@@ -26,11 +31,11 @@ export class LevelFactory {
             ) || [];
 
             const enemies = levelData.enemies?.map(enemyData =>
-                new Enemy(enemyData.x, enemyData.y, enemyData.projectileType)
+                new Enemy(enemyData.x, enemyData.y, enemyData.type)
             ) || [];
 
-            const items = levelData.items?.map(itemData => 
-                new Item(itemData.x, itemData.y, itemData.type)
+            const items = levelData.items?.map(itemData =>
+                LevelFactory.createItem(itemData)
             ) || [];
 
             const effects = levelData.effects?.map(effectsData =>
@@ -50,12 +55,26 @@ export class LevelFactory {
                 return new Obstacle(data.x, data.y, data.width, data.height, data.color);
             case 'MovingObstacle':
                 return new MovingObstacle(data.x, data.y, data.dx, data.dy, data.width, data.height, data.color);
-          
             default:
                 throw new Error(`Unknown obstacle type: ${data.type}`);
         }
     }
 
+    // Factory method to create items based on their type
+    static createItem(data) {
+        switch (data.type) {
+            case 'Speed':
+                return new SpeedItem(data.x, data.y);
+            case 'Size':
+                return new SizeItem(data.x, data.y);
+            case 'Shield':
+                return new ShieldItem(data.x, data.y);
+            default:
+                throw new Error(`Unknown item type: ${data.type}`);
+        }
+    }
+
+    // Factory method to create effects based on their type
     static createEffect(data) {
         switch (data.type) {
             case 'Wind':

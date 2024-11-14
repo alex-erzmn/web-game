@@ -1,23 +1,31 @@
 import { Rectangle } from "../gamePhysics/shapes/rectangle.js";
 import { Utility } from "../utility.js";
+import { SpeedItem } from "../levels/elements/items/speedItem.js";
+import { SizeItem } from "../levels/elements/items/sizeItem.js";
+import { ShieldItem } from "../levels/elements/items/shieldItem.js";
 
 export class Player extends Rectangle {
     constructor(x, y, color, controls) {
         super(x, y, 20, 20, color);
         this.dx = 0;
         this.dy = 0;
-        this.speed = 5;
+        this.speed = 500;
         this.controls = controls;
         this.points = 0;
         this.finished = false;
 
+        // Squeeze effect variables
         this.isSqueezed = false;
         this.squeezeFactor = 1.0;
         this.squeezeSteps = 0;
         this.widthFactor = 1.0;
         this.heightFactor = 1.0;
+
+        // Trail variables
         this.trail = [];
         this.maxTrailLength = 5;
+
+        // Power-up effects
         this.isSpeedBoosted = false;
         this.isSizeBoosted = false;
         this.isShielded = false;
@@ -25,22 +33,12 @@ export class Player extends Rectangle {
         this.boostDuration = 5000;
     }
 
-    // Regular move
-    move() {
-        // Store the current position in the trail before moving
-        this.trail.push({ x: this.x, y: this.y, opacity: 0.1 });
-
-        // Limit trail length
-        if (this.trail.length > this.maxTrailLength) {
-            this.trail.shift();
-        }
-        // Update position using dx and dy
-        this.x += this.dx;
-        this.y += this.dy;
-    }
-
-    // Smaller move and collision check to avoid unintended behavior
-    smallMove(i, game) {
+    /**
+     * Move the player by a certain amount of divisions
+     * @param {number} i - The amount of divisions to move the player by 
+     * @param {object} game - The game object
+     */
+    move(i, game) {
         this.trail.push({ x: this.x, y: this.y, opacity: 0.1 });
 
         if (this.trail.length > this.maxTrailLength) {
@@ -50,7 +48,6 @@ export class Player extends Rectangle {
         for (let j = 0; j < i; j++) {
             this.x += this.dx / i;
             this.y += this.dy / i;
-            // Check for collisions after each small step
             game.collisionManager.checkPlayerCollisions();
         }
     }
@@ -61,34 +58,29 @@ export class Player extends Rectangle {
     }
 
     // Activate power-up effects
-    activatePowerUp(itemType) {
-        switch (itemType) {
-            case "speed":
-                this.isSpeedBoosted = true;
-                this.speed *= 1.5; // Increase speed by 50%
-                setTimeout(() => this.deactivatePowerUp("speed"), this.boostDuration);
-                break;
-            case "size":
-                this.isSizeBoosted = true;
-                this.width = 50;
-                this.height = 50;
-                setTimeout(() => this.deactivatePowerUp("size"), this.boostDuration);
-                break;
-            case "shield":
-                this.isShielded = true;
-                setTimeout(() => this.deactivatePowerUp("shield"), this.boostDuration);
-                break;
-            default:
-                break;
+    activatePowerUp(item) {
+        if (item instanceof SpeedItem) {
+            this.isSpeedBoosted = true;
+            this.speed *= 1.5;
+            setTimeout(() => this.deactivatePowerUp("speed"), this.boostDuration);
+        } else if (item instanceof SizeItem) {
+            this.isSizeBoosted = true;
+            this.width = 50;
+            this.height = 50;
+            setTimeout(() => this.deactivatePowerUp("size"), this.boostDuration);
+        } else if (item instanceof ShieldItem) {
+            this.isShielded = true;
+            setTimeout(() => this.deactivatePowerUp("shield"), this.boostDuration);
         }
     }
+
 
     // Deactivate power-up effects
     deactivatePowerUp(itemType) {
         switch (itemType) {
             case "speed":
                 this.isSpeedBoosted = false;
-                this.speed /= 1.5; // Reset speed to normal
+                this.speed /= 1.5;
                 break;
             case "size":
                 this.isSizeBoosted = false;
@@ -106,38 +98,33 @@ export class Player extends Rectangle {
     draw(ctx) {
         ctx.save();
 
-        // Draw each trail segment with its current opacity
         if (this.isShielded) {
             this.trail.forEach(segment => {
-                ctx.fillStyle = `rgba(230, 230, 230, ${segment.opacity})`; // Use RGB values and opacity for trail
+                ctx.fillStyle = `rgba(230, 230, 230, ${segment.opacity})`;
                 ctx.fillRect(segment.x, segment.y, this.width, this.height);
             });
         } else {
             this.trail.forEach(segment => {
-                ctx.fillStyle = Utility.hexToRgba(this.color, segment.opacity); // Use RGB values and opacity for trail
+                ctx.fillStyle = Utility.hexToRgba(this.color, segment.opacity);
                 ctx.fillRect(segment.x, segment.y, this.width, this.height);
             });
         }
 
-        // Update the opacity of each segment based on its index in the trail
-        this.trail.forEach((segment, index) => {
-            segment.opacity = 0.2; // Fixed opacity for all trail segments
+        this.trail.forEach((segment) => {
+            segment.opacity = 0.2;
         });
 
-        // Remove segments that are fully transparent
         this.trail = this.trail.filter(segment => segment.opacity > 0);
 
-        // Apply squeeze effect by adjusting width and height factors
+
         const width = this.width * this.widthFactor;
         const height = this.height * this.heightFactor;
 
-
-        // Draw the player itself
-        ctx.fillStyle = this.color; // Draw the player using its color
+        ctx.fillStyle = this.color;
         if (this.isSqueezed) {
             ctx.fillRect(this.x, this.y, width, height);
         } else if (this.isShielded) {
-            ctx.strokeStyle = "#FFFF00"; // Yellow outline for shielded player
+            ctx.strokeStyle = "#FFFF00";
             ctx.lineWidth = 3;
             ctx.strokeRect(this.x, this.y, this.width, this.height);
         } else {

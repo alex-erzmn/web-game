@@ -5,6 +5,7 @@ export class MovingObstacle extends Obstacle {
         super(x, y, width, height, color);
         this.dx = dx;
         this.dy = dy;
+        this.speed = 300
         
         // Normalize the direction vector to maintain consistent speed
         const magnitude = Math.sqrt(this.dx ** 2 + this.dy ** 2);
@@ -15,9 +16,8 @@ export class MovingObstacle extends Obstacle {
     }
 
     update(delta) {
-        // Update position based on direction, speed, and delta
-        this.x += this.dx * delta;
-        this.y += this.dy * delta;
+        this.x += this.dx * this.speed * delta;
+        this.y += this.dy * this.speed * delta;
     }
 
     draw(ctx) {
