@@ -13,7 +13,7 @@
             <div id="player1" class="color-selector" style="background-color: #FF0000;"></div>
             <div id="player2" class="color-selector" style="background-color: #00FF00;"></div>
             <div id="player3" class="color-selector" style="background-color: #0000FF;"></div>
-            <div id="player4" class="color-selector" style="background-color: #FFFF00;"></div>
+            <div id="player4" class="color-selector" style="background-color: #ffdc40;"></div>
         </div>
 
         <!-- Color Palette with predefined colors -->
@@ -22,14 +22,14 @@
             <div class="color-option" style="background-color: #FF0000;"></div>
             <div class="color-option" style="background-color: #00FF00;"></div>
             <div class="color-option" style="background-color: #0000FF;"></div>
-            <div class="color-option" style="background-color: #FFFF00;"></div>
+            <div class="color-option" style="background-color: #ffdc40;"></div>
             <div class="color-option" style="background-color: #FF00FF;"></div>
             <div class="color-option" style="background-color: #00FFFF;"></div>
             <div class="color-option" style="background-color: #FFA500;"></div>
-            <div class="color-option" style="background-color: #808080;"></div>
-            <div class="color-option" style="background-color: #88FFFF;"></div>
-            <div class="color-option" style="background-color: #AAA500;"></div>
-            <div class="color-option" style="background-color: #000000;"></div>
+            <div class="color-option" style="background-color: #802d2d;"></div>
+            <div class="color-option" style="background-color: #9cff62;"></div>
+            <div class="color-option" style="background-color: #a46efc;"></div>
+            <div class="color-option" style="background-color: #4ba8ff;"></div>
         </div>
         </p>
 

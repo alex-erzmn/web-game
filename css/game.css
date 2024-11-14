@@ -86,12 +86,11 @@ td {
 .level-overview-container {
   border: 4px solid #787ec5;
   padding: 20px;
-  text-align: left;
   font-size: 18px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   background-color: rgba(255, 255, 255, 1);
   border-radius: 10px;
-  width: 200px;  /* Adjust the width based on your design */
+  width: 180px;  /* Adjust the width based on your design */
   height: 400px; /* Set a fixed height for the scrollable container */
   display: flex;
   flex-direction: column; /* Stack header and levels vertically */
@@ -100,7 +99,6 @@ td {
 #level-overview-header {
   /* Style for the header */
   background-color: #fff;
-  padding: 10px;
   font-size: 18px;
   font-weight: bold;
   z-index: 1; /* Ensure header stays on top */
@@ -108,7 +106,7 @@ td {
 
 #level-overview {
   flex-grow: 1; /* Allow the levels container to take up available space */
-  padding: 10px;
+  padding: 0px 10px;
   overflow-y: auto; /* Allow scrolling for levels */
   -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
   scrollbar-width: none; /* Hide scrollbar in Firefox */
@@ -120,6 +118,9 @@ td {
 }
 
 .level {
+  display: flex; /* Align items in a row */
+  justify-content: space-between; /* Space out text and icon */
+  align-items: center; /* Vertically align items */
   margin: 5px 0;
   padding: 8px;
   color: white;
@@ -128,9 +129,14 @@ td {
 }
 
 #current-level {
+  text-align: left;
   background-color: #ff8d47; /* Highlight color for current level */
   font-weight: bold;
   color: white;
+}
+
+.fog-icon {
+  margin-left: auto; /* Ensure it aligns to the right */
 }
 
 

@@ -58,6 +58,7 @@ if (!isset($abs_path)) {
             </div>
         </div>
     </div>
+    <div id="fps-container"></div>
     <script type="module">
         import { GameController } from './js/gameController.js';
 

@@ -292,3 +292,13 @@ body::before {
   background-color: #ffdd57;
   cursor: pointer;
 }
+
+#fps-container {
+  position: absolute; /* Position it relative to the nearest positioned ancestor (body in this case) */
+  bottom: 20px; /* 20px from the bottom */
+  left: 20px; /* 20px from the left */
+  color: white; /* White text color */
+  z-index: 10; /* Ensures it's visible on top of other elements */
+  font-size: 16px; /* Adjust the font size for better visibility */
+  padding: 5px; /* Optional: add some padding for better readability */
+}

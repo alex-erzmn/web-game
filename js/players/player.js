@@ -1,29 +1,63 @@
 import { Rectangle } from "../gamePhysics/shapes/rectangle.js";
+import { Utility } from "../utility.js";
 
 export class Player extends Rectangle {
     constructor(x, y, color, controls) {
         super(x, y, 20, 20, color);
-        this.speed = 10;
+        this.dx = 0;
+        this.dy = 0;
+        this.speed = 5;
         this.controls = controls;
         this.points = 0;
         this.finished = false;
 
-        // Squeeze effect properties
         this.isSqueezed = false;
-        this.squeezeFactor = 1.0; // Starts at normal size
+        this.squeezeFactor = 1.0;
         this.squeezeSteps = 0;
         this.widthFactor = 1.0;
         this.heightFactor = 1.0;
-
-        // Array to store trail segments
         this.trail = [];
-        this.maxTrailLength = 5; // Adjust for longer or shorter trails
-
-        // item effects
+        this.maxTrailLength = 5;
         this.isSpeedBoosted = false;
         this.isSizeBoosted = false;
         this.isShielded = false;
-        this.boostDuration = 5000; // 5 seconds for boost duration
+        this.isControlInverted = false;
+        this.boostDuration = 5000;
+    }
+
+    // Regular move
+    move() {
+        // Store the current position in the trail before moving
+        this.trail.push({ x: this.x, y: this.y, opacity: 0.1 });
+
+        // Limit trail length
+        if (this.trail.length > this.maxTrailLength) {
+            this.trail.shift();
+        }
+        // Update position using dx and dy
+        this.x += this.dx;
+        this.y += this.dy;
+    }
+
+    // Smaller move and collision check to avoid unintended behavior
+    smallMove(i, game) {
+        this.trail.push({ x: this.x, y: this.y, opacity: 0.1 });
+
+        if (this.trail.length > this.maxTrailLength) {
+            this.trail.shift();
+        }
+
+        for (let j = 0; j < i; j++) {
+            this.x += this.dx / i;
+            this.y += this.dy / i;
+            // Check for collisions after each small step
+            game.collisionManager.checkPlayerCollisions();
+        }
+    }
+
+    updatePosition(x, y) {
+        this.x = x;
+        this.y = y;
     }
 
     // Activate power-up effects
@@ -36,8 +70,8 @@ export class Player extends Rectangle {
                 break;
             case "size":
                 this.isSizeBoosted = true;
-                this.width *= 1.5;
-                this.height *= 1.5;
+                this.width = 50;
+                this.height = 50;
                 setTimeout(() => this.deactivatePowerUp("size"), this.boostDuration);
                 break;
             case "shield":
@@ -58,8 +92,8 @@ export class Player extends Rectangle {
                 break;
             case "size":
                 this.isSizeBoosted = false;
-                this.width /= 1.5;
-                this.height /= 1.5;
+                this.width = 20;
+                this.height = 20;
                 break;
             case "shield":
                 this.isShielded = false;
@@ -69,38 +103,8 @@ export class Player extends Rectangle {
         }
     }
 
-    move(newX, newY) {
-        // Add current position to the trail before updating position
-        this.trail.push({ x: this.x, y: this.y, opacity: 0.1 }); // Start with 50% opacity
-
-        // Limit trail length
-        if (this.trail.length > this.maxTrailLength) {
-            this.trail.shift(); // Remove the oldest trail segment
-        }
-
-        // Update player position
-        this.x = newX;
-        this.y = newY;
-    }
-
-    // Helper function to convert hex color to individual RGB components
-    hexToRgb(hex) {
-        // Remove the '#' if present
-        hex = hex.replace('#', '');
-
-        // Parse the RGB components from the hex string
-        const r = parseInt(hex.substring(0, 2), 16);
-        const g = parseInt(hex.substring(2, 4), 16);
-        const b = parseInt(hex.substring(4, 6), 16);
-
-        return { r, g, b }; // Return an object with r, g, and b components
-    }
-
     draw(ctx) {
         ctx.save();
-
-        // Convert the hex color to RGB components
-        const { r, g, b } = this.hexToRgb(this.color);
 
         // Draw each trail segment with its current opacity
         if (this.isShielded) {
@@ -110,7 +114,7 @@ export class Player extends Rectangle {
             });
         } else {
             this.trail.forEach(segment => {
-                ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${segment.opacity})`; // Use RGB values and opacity for trail
+                ctx.fillStyle = Utility.hexToRgba(this.color, segment.opacity); // Use RGB values and opacity for trail
                 ctx.fillRect(segment.x, segment.y, this.width, this.height);
             });
         }

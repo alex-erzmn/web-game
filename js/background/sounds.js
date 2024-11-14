@@ -2,27 +2,27 @@
 const soundEffects = {
     collision: new Howl({
         src: ['assets/sounds/collision.mp3'],
-        volume: 0.5,
+        volume: 0.1,
     }),
     goalReached: new Howl({
         src: ['assets/sounds/goalReached.mp3'],
-        volume: 0.5,
+        volume: 0.1,
     }),
     allLevelsCompleted: new Howl({
         src: ['assets/sounds/allLevelsCompleted.mp3'],
-        volume: 0.5,
+        volume: 0.1,
     }),
     squeeze: new Howl({
         src: ['assets/sounds/squeeze.mp3'],
-        volume: 0.5,
+        volume: 0.1,
     }),
     shot: new Howl({
         src: ['assets/sounds/shot.mp3'],
-        volume: 0.5,
+        volume: 0.1,
     }),
     gotShot: new Howl({
         src: ['assets/sounds/gotShot.mp3'],
-        volume: 0.5,
+        volume: 0.1,
     }),
 };
 

@@ -38,6 +38,7 @@ export class EvaluationManager {
     }
 
     gameFinished() {
+        this.updateScoreTable();
         this.#startConfetti();
 
         Sounds.soundEffects.allLevelsCompleted.play();

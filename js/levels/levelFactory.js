@@ -5,6 +5,9 @@ import { Exit } from './elements/exit.js';
 import { Start } from './elements/start.js';
 import { Enemy } from './elements/enemies/enemy.js';
 import { Item } from './elements/items/item.js';
+import { Wind } from './elements/effects/wind.js';
+import { Mud } from './elements/effects/mud.js';
+import { Inverter } from './elements/effects/inverter.js';
 
 export class LevelFactory {
     static async loadLevels(url) {
@@ -23,14 +26,20 @@ export class LevelFactory {
             ) || [];
 
             const enemies = levelData.enemies?.map(enemyData =>
-                new Enemy(enemyData.x, enemyData.y)
+                new Enemy(enemyData.x, enemyData.y, enemyData.projectileType)
             ) || [];
 
             const items = levelData.items?.map(itemData => 
                 new Item(itemData.x, itemData.y, itemData.type)
             ) || [];
 
-            return new Level(start, exit, obstacles, enemies, items); // No separate movingObstacles array
+            const effects = levelData.effects?.map(effectsData =>
+                LevelFactory.createEffect(effectsData)
+            ) || [];
+
+            const fog = levelData?.fog || false;
+
+            return new Level(start, exit, obstacles, enemies, items, effects, fog);
         });
     }
 
@@ -40,10 +49,23 @@ export class LevelFactory {
             case 'Obstacle':
                 return new Obstacle(data.x, data.y, data.width, data.height, data.color);
             case 'MovingObstacle':
-                return new MovingObstacle(data.x, data.y, data.width, data.height, data.color, data.speed, data.direction);
-            // Add more cases here for other obstacle types
+                return new MovingObstacle(data.x, data.y, data.dx, data.dy, data.width, data.height, data.color);
+          
             default:
                 throw new Error(`Unknown obstacle type: ${data.type}`);
+        }
+    }
+
+    static createEffect(data) {
+        switch (data.type) {
+            case 'Wind':
+                return new Wind(data.x, data.y, data.dx, data.dy, data.width, data.height, data.force);
+            case 'Mud':
+                return new Mud(data.x, data.y, data.width, data.height, data.slowDownFactor);
+            case 'Inverter':
+                return new Inverter(data.x, data.y, data.width, data.height);
+            default:
+                throw new Error(`Unknown effect type: ${data.type}`);
         }
     }
 }

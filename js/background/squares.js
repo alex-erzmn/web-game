@@ -1,3 +1,5 @@
+import { Utility } from "../utility.js";
+
 document.addEventListener('DOMContentLoaded', function () {
     const squaresContainer = document.querySelector('.squares-container');
     let playerCount = Number(sessionStorage.getItem('playerCount')) || 0; // Default to 0 players
@@ -56,21 +58,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Choose colors based on the updated player count
         const colorOptions = colorSets[playerCount];
-        const randomColor = colorOptions[Math.floor(Math.random() * colorOptions.length)];
-
-        // Ensure randomColor is valid before using replace() on it
-        if (!randomColor) {
-            console.error('Invalid color:', randomColor);
-            return; // Prevent further execution if color is invalid
-        }
+        const selectedColor  = colorOptions[Math.floor(Math.random() * colorOptions.length)];
 
         // Generate a random transparency
         const randomTransparency = getRandomTransparency();
 
-        // Set the background color with random transparency
-        square.style.backgroundColor = randomColor.replace(/rgba?\((\d+), (\d+), (\d+), (\d+(\.\d+)?)\)/, (_, r, g, b) => {
-            return `rgba(${r}, ${g}, ${b}, ${randomTransparency})`;
-        });
+        if (selectedColor.startsWith('#')) {
+            // Convert hex color to rgba with transparency
+            square.style.backgroundColor = Utility.hexToRgba(selectedColor, randomTransparency);
+        } else {
+            // If it's already in rgba format, just add the transparency
+            square.style.backgroundColor = selectedColor.replace(/rgba?\((\d+), (\d+), (\d+),? (\d+(\.\d+)?)?\)/, (_, r, g, b) => {
+                return `rgba(${r}, ${g}, ${b}, ${randomTransparency})`;
+            });
+        }
 
         // Set a random animation duration
         const duration = Math.random() * 5 + 5; // Duration between 5s and 10s

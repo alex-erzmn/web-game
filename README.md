@@ -18,8 +18,8 @@ As levels increase, new elements appear:
 
 --------------------- Current state -------------------------
 
-**Levels 8-15:** New elements appear: bonuses that increase the player's speed, malus that invert the controls for 3 seconds, zones on the course that slow down or teleport elsewhere. Fans speed up or slow down certain corridors...
-**Levels 15-20:** certain walls must not be touched, otherwise you'll be electrocuted and have to start all over again.
+**Levels 8-15:** New elements appear: bonuses that increase the player's speed, malus that invert the controls for 3 seconds, zones on the course that slow down or teleport elsewhere. Fans speed up or slow down certain corridors... ✅
+**Levels 15-20:** certain walls must not be touched, otherwise you'll be electrocuted and have to start all over again. ✅
     - It's up to you: you can add enemies, bouncing balls between walls, the possibility, as in Mario Kart, of picking up items that you can throw or drop, etc. 
     - switches that change the level topology
     - Moving exit 

@@ -16,7 +16,7 @@ export class Game {
         this.canvasHeight = this.canvas.height;
 
         // Game
-        this.then = new Date().getTime();
+        this.then = 0;
         this.gameRunning = false;
 
         // Managers
@@ -28,6 +28,12 @@ export class Game {
         this.playerManager.initializePlayers();
         this.evaluationManager.updateScoreTable();
         this.levelManager.initializeLevels();
+
+        // Initialize FPS tracking variables
+        this.lastTime = 0;
+        this.fps = 0;
+        this.frameCount = 0;
+        this.fpsContainer = document.getElementById('fps-container');
     }
 
     getCanvas() {
@@ -46,6 +52,10 @@ export class Game {
         return this.playerManager.finishedPlayers;
     }
 
+    getNotFinishedPlayers() {
+        return this.playerManager.players.filter(player => !player.finished);
+    }
+
     getStart() {
         return this.levelManager.start;
     }
@@ -62,6 +72,10 @@ export class Game {
         return this.levelManager.items;
     }
 
+    getEffects() {
+        return this.levelManager.effects;
+    }
+
     removeItem(item) {
         this.levelManager.removeItem(item);
     }
@@ -74,8 +88,30 @@ export class Game {
         this.startCountdown(1, () => {
             Sounds.backgroundMusic.gameBackgroundMusic.play();
             this.gameRunning = true;
+            this.then = new Date().getTime();
             this.mainLoop();
         });
+    }
+
+    stop() {
+        this.gameRunning = false;
+    }
+
+    measureFPS(now) {
+        // Calculate time difference between frames
+        const diffTime = now - this.lastTime;
+
+        // Update FPS every second
+        if (diffTime >= 1000) {
+            this.fps = this.frameCount;
+            this.frameCount = 0;
+            this.lastTime = now;
+        }
+
+        // Display FPS in the fps-container div
+        this.fpsContainer.innerHTML = `FPS: ${this.fps}`;
+
+        this.frameCount++;
     }
 
     // -------------------------- Countdown Management --------------------------
@@ -106,12 +142,15 @@ export class Game {
     mainLoop() {
         if (this.gameRunning) {
             let now = new Date().getTime();
-            let delta = now - this.then;
+            let delta = (now - this.then) / 10;
+            
+            this.measureFPS(now); // Update and display FPS
 
             this.clearCanvas();
             this.update(delta);
             this.checkCollisions();
             this.draw();
+            this.playerManager.checkPlayersReachedExit();
 
             requestAnimationFrame(this.mainLoop.bind(this));
 
@@ -125,8 +164,8 @@ export class Game {
 
     update(delta) {
         // TODO: Use delta to ensure the same behavior in case of lower fps! (speed * delta) / 1000; 
-        this.levelManager.updateLevel();
-        this.playerManager.updatePlayers();
+        this.levelManager.updateLevel(delta);
+        this.playerManager.updatePlayers(delta);
 
         this.evaluationManager.updateScoreTable();
     }
@@ -142,17 +181,73 @@ export class Game {
 
         this.playerManager.drawPlayers(this.ctx);
         this.levelManager.drawLevel(this.ctx);
+        this.drawFogOfWar();
 
         this.ctx.restore();
     }
+
+    // Updated drawFogOfWar function using an off-screen canvas for fog overlay
+    drawFogOfWar() {
+        // Only draw fog if enabled for the current level
+        if (!this.levelManager.getCurrentLevelFog()) return;
+
+        // Step 1: Create an off-screen canvas for the fog layer
+        const fogCanvas = document.createElement('canvas');
+        fogCanvas.width = this.canvasWidth;
+        fogCanvas.height = this.canvasHeight;
+        const fogCtx = fogCanvas.getContext('2d');
+
+        // Step 2: Draw a full-screen dark fog layer on the off-screen canvas
+        fogCtx.fillStyle = 'rgba(0, 0, 0, 1)'; // Dark fog layer, adjust opacity as needed
+        fogCtx.fillRect(0, 0, fogCanvas.width, fogCanvas.height);
+
+        // Step 3: Set composite operation to 'destination-out' for each player's visibility bubble
+        fogCtx.globalCompositeOperation = 'destination-out';
+
+        // Draw a gradient "visibility bubble" for each player
+        this.getPlayers().forEach(player => {
+            if (!player.finished) {
+                const playerCenterX = player.x + player.width / 2; // Center X
+                const playerCenterY = player.y + player.height / 2; // Center Y
+                const visibilityRadius = 100; // Adjust as needed for each player's visibility
+
+                // Create a radial gradient for the visibility bubble around the player's center
+                const gradient = fogCtx.createRadialGradient(
+                    playerCenterX, playerCenterY, visibilityRadius * 0.5, // Inner radius of gradient
+                    playerCenterX, playerCenterY, visibilityRadius         // Outer radius
+                );
+
+                gradient.addColorStop(0, 'rgba(0, 0, 0, 1)');   // Transparent in the center
+                gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');   // Opaque at the edges
+
+                // Apply the gradient as a "cut-out" from the fog
+                fogCtx.fillStyle = gradient;
+                fogCtx.fillRect(playerCenterX - visibilityRadius, playerCenterY - visibilityRadius,
+                    visibilityRadius * 2, visibilityRadius * 2);
+            }
+        });
+
+        // Step 4: Reset the composite operation for fogCtx
+        fogCtx.globalCompositeOperation = 'source-over';
+
+        // Step 5: Draw the off-screen fog canvas onto the main canvas
+        this.ctx.save();
+        this.ctx.globalAlpha = 1; // Adjust this for fog transparency on the main canvas
+        this.ctx.drawImage(fogCanvas, 0, 0);
+        this.ctx.restore();
+    }
+
+
+
 
     nextLevel() {
         if (this.levelManager.nextLevel()) {
             this.gameRunning = false;
             this.startCountdown(1, () => {
                 this.levelManager.prepareStage();
-                this.playerManager.resetFinishedStatus();
+                this.playerManager.resetPlayers();
                 this.gameRunning = true;
+                this.then = new Date().getTime();
                 this.mainLoop();
             });
         } else {

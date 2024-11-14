@@ -1,8 +1,5 @@
 import { LevelFactory } from './levelFactory.js';
-import { Game } from '../game.js';
 import { MovingObstacle } from './elements/obstacles/movingObstacle.js';
-import { Item } from './elements/items/item.js';
-import { Enemy } from "./elements/enemies/enemy.js";
 
 export class LevelManager {
     constructor(game) {
@@ -12,8 +9,14 @@ export class LevelManager {
         this.obstacles = [];
         this.enemies = [];
         this.items = [];
+        this.effects = [];
         this.start = null;
         this.exit = null;
+        this.fog = [];
+    }
+
+    getCurrentLevelFog() {
+        return this.levels[this.currentLevel - 1]?.fog || false;
     }
 
     removeItem(item) {
@@ -34,12 +37,14 @@ export class LevelManager {
         this.exit = currentLevelData.exit;
         this.enemies = currentLevelData.enemies;
         this.items = currentLevelData.items;
-        this.layout = currentLevelData.layout;
+        this.effects = currentLevelData.fans;
+        this.fog = currentLevelData.fog;
         this.framesSinceStart = 0;
 
         const players = this.game.getPlayers();
         players.forEach(player => {
-            player.move(this.start.x, this.start.y);
+            player.x = this.start.x;
+            player.y = this.start.y;
         });
         this.updateLevelOverview(this.currentLevel);
     }
@@ -52,16 +57,20 @@ export class LevelManager {
         return true;
     }
 
-    updateLevel() {
+    updateLevel(delta) {
         this.obstacles.forEach(movingObstacle => {
             if (movingObstacle instanceof MovingObstacle) {
-                movingObstacle.update(this.game.getCanvas(), this.obstacles);
+                movingObstacle.update(delta);
             }
         });
 
         this.enemies.forEach(enemy => {
-            enemy.update();
+            enemy.update(this.game.getPlayers().filter(obj => !obj.isFinished), delta);
         });
+
+        this.effects.forEach(effect => {
+            effect.update();
+        })
 
     }
 
@@ -69,6 +78,7 @@ export class LevelManager {
         this.enemies.forEach(enemy => enemy.draw(ctx));
         this.obstacles.forEach(obstacle => obstacle.draw(ctx));
         this.items.forEach(item => item.draw(ctx));
+        this.effects.forEach(effect => effect.draw(ctx));
         this.exit.draw(ctx);
     }
 
@@ -80,13 +90,25 @@ export class LevelManager {
         for (let i = 1; i <= this.levels.length; i++) {
             const levelDiv = document.createElement("div");
             levelDiv.classList.add("level");
-            levelDiv.innerText = `Level ${i}`;
             
+            // Create a span for the level text
+            const levelText = document.createElement("span");
+            levelText.innerText = `Level ${i}`;
+            levelDiv.appendChild(levelText);
+    
+            // Check if the current level has fog enabled
+            if (this.levels[i - 1].fog) {
+                const fogIcon = document.createElement("i");
+                fogIcon.classList.add("fa-regular", "fa-moon");
+                fogIcon.classList.add("fog-icon"); // Add an extra class for styling
+                levelDiv.appendChild(fogIcon); // Append the fog icon next to the level text
+            }
+    
             // Highlight the current level
             if (i === currentLevel) {
                 levelDiv.id = "current-level";
             }
-            
+    
             levelOverview.appendChild(levelDiv);
         }
     
@@ -95,5 +117,5 @@ export class LevelManager {
         if (currentLevelElement) {
             currentLevelElement.scrollIntoView({ behavior: "smooth", block: "center" });
         }
-    }
+    }   
 }

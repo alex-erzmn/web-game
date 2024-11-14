@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const colorPalette = document.getElementById('colorPalette');
     const gameStarted = sessionStorage.getItem('gameStarted') === 'true';
-    const playerColors = { player1: "#FF0000", player2: "#00FF00", player3: "#0000FF", player4: "#FFFF00" };
+    const playerColors = { player1: "#FF0000", player2: "#00FF00", player3: "#0000FF", player4: "#ffdc40" };
     let currentPlayer = null;
 
     // Manage enable / disable color selection depending on game status
