@@ -61,7 +61,7 @@ export class Player extends Rectangle {
     activatePowerUp(item) {
         if (item instanceof SpeedItem) {
             this.isSpeedBoosted = true;
-            this.speed *= 1.5;
+            this.speed *= 1.3;
             setTimeout(() => this.deactivatePowerUp("speed"), this.boostDuration);
         } else if (item instanceof SizeItem) {
             this.isSizeBoosted = true;
@@ -80,7 +80,7 @@ export class Player extends Rectangle {
         switch (itemType) {
             case "speed":
                 this.isSpeedBoosted = false;
-                this.speed /= 1.5;
+                this.speed /= 1.3;
                 break;
             case "size":
                 this.isSizeBoosted = false;

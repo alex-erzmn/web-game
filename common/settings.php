@@ -13,7 +13,7 @@
             <div id="player1" class="color-selector" style="background-color: #FF0000;"></div>
             <div id="player2" class="color-selector" style="background-color: #00FF00;"></div>
             <div id="player3" class="color-selector" style="background-color: #0000FF;"></div>
-            <div id="player4" class="color-selector" style="background-color: #ffdc40;"></div>
+            <div id="player4" class="color-selector" style="background-color: #FFDC40;"></div>
         </div>
 
         <!-- Color Palette with predefined colors -->
@@ -22,7 +22,7 @@
             <div class="color-option" style="background-color: #FF0000;"></div>
             <div class="color-option" style="background-color: #00FF00;"></div>
             <div class="color-option" style="background-color: #0000FF;"></div>
-            <div class="color-option" style="background-color: #ffdc40;"></div>
+            <div class="color-option" style="background-color: #FFDC40;"></div>
             <div class="color-option" style="background-color: #FF00FF;"></div>
             <div class="color-option" style="background-color: #00FFFF;"></div>
             <div class="color-option" style="background-color: #FFA500;"></div>

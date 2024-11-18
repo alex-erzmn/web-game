@@ -15,7 +15,7 @@ export class Enemy extends Rectangle {
         this.speed = 200;
         this.dx = 0;
         this.dy = 0;
-        this.changeDirectionCooldown = 100;
+        this.changeDirectionCooldown = 120;
         this.directionCounter = 0;
 
         this.projectileType = projectileType || 'Projectile';

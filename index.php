@@ -70,6 +70,7 @@ if (!isset($abs_path)) {
         </fieldset>
         <button class="start-button" onclick="startGame()">Start Game</button>
     </div>
+   
     <script type="module">
         import { Sounds } from './js/background/sounds.js';
 

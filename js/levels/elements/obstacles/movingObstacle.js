@@ -5,19 +5,15 @@ export class MovingObstacle extends Obstacle {
         super(x, y, width, height, color);
         this.dx = dx;
         this.dy = dy;
-        this.speed = 300
-        
-        // Normalize the direction vector to maintain consistent speed
-        const magnitude = Math.sqrt(this.dx ** 2 + this.dy ** 2);
-        if (magnitude !== 0) {
-            this.dx /= magnitude;
-            this.dy /= magnitude;
-        }
+        this.speed = 300;
     }
 
-    update(delta) {
-        this.x += this.dx * this.speed * delta;
-        this.y += this.dy * this.speed * delta;
+    update(i, delta, game) {
+        for (let j = 0; j < i; j++) {
+            this.x += this.dx * this.speed * delta / i;
+            this.y += this.dy * this.speed * delta / i;
+            game.collisionManager.checkMovingObstacleCollisions();
+        }
     }
 
     draw(ctx) {

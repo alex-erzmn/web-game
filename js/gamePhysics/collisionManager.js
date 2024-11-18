@@ -19,7 +19,7 @@ export class CollisionManager {
         const exit = this.game.getExit();
 
         players.forEach(player => {
-            this.#checkPlayerWithFansCollisions(player, effects);
+            this.#checkPlayerWithEffectsCollisions(player, effects);
             this.#checkPlayerWithEnemiesCollisions(player, enemies, obstacles, canvas, start);
             this.#checkPlayerWithObstaclesCollisions(player, obstacles);
             this.#checkPlayerWithBoundariesCollisions(player, canvas);
@@ -30,7 +30,7 @@ export class CollisionManager {
         });
     }
 
-    #checkPlayerWithFansCollisions(player, effects) {
+    #checkPlayerWithEffectsCollisions(player, effects) {
         effects.forEach(effect => {
             if (CollisionDetection.checkCollision(player, effect)) {
                 effect.applyEffect(player);
@@ -354,7 +354,7 @@ export class CollisionManager {
 
 
     #checkPlayerPlayerCollision(player, otherPlayer, obstacles, canvas) {
-        if (player !== otherPlayer && this.#arePlayersColliding(player, otherPlayer)) {
+        if (player !== otherPlayer && CollisionDetection.checkCollision(player, otherPlayer)) {
             // Calculate the horizontal and vertical distances
             const dx = otherPlayer.x - player.x;
             const dy = otherPlayer.y - player.y;
@@ -404,13 +404,6 @@ export class CollisionManager {
                 }
             }
         }
-    }
-
-    #arePlayersColliding(player, otherPlayer) {
-        // Basic circle collision based on a radius around each player
-        const collisionRadius = 10; // Customize based on player size
-        const dist = Math.hypot(player.x - otherPlayer.x, player.y - otherPlayer.y);
-        return dist < collisionRadius * 2; // Players are "colliding" if distance is less than twice the radius
     }
 
     // ---------- Enemy Collision Checks ----------
@@ -464,29 +457,32 @@ export class CollisionManager {
     #checkEnemyWithObstaclesCollisions(enemy, obstacles) {
         obstacles.forEach(obstacle => {
             if (CollisionDetection.checkCollision(enemy, obstacle)) {
-                // Determine overlap direction and adjust enemy's position to prevent moving through obstacle
+                // Calculate the overlap
                 const dxOverlap = (enemy.x + enemy.width / 2) - (obstacle.x + obstacle.width / 2);
                 const dyOverlap = (enemy.y + enemy.height / 2) - (obstacle.y + obstacle.height / 2);
 
-                // Resolve the overlap on the axis with the least overlap (push enemy away from obstacle)
+                // Resolve overlap based on the smallest penetration axis
                 if (Math.abs(dxOverlap) > Math.abs(dyOverlap)) {
-                    // Horizontal collision with obstacle
+                    // Horizontal collision
                     if (dxOverlap > 0) {
-                        enemy.x = obstacle.x + obstacle.width;  // Push enemy to the right of obstacle
+                        enemy.x = obstacle.x + obstacle.width; // Push enemy to the right of the obstacle
                     } else {
-                        enemy.x = obstacle.x - enemy.width;  // Push enemy to the left of obstacle
+                        enemy.x = obstacle.x - enemy.width; // Push enemy to the left of the obstacle
                     }
+                    enemy.dx = 0; // Stop horizontal movement upon collision
                 } else {
-                    // Vertical collision with obstacle
+                    // Vertical collision
                     if (dyOverlap > 0) {
-                        enemy.y = obstacle.y + obstacle.height;  // Push enemy below obstacle
+                        enemy.y = obstacle.y + obstacle.height; // Push enemy below the obstacle
                     } else {
-                        enemy.y = obstacle.y - enemy.height;  // Push enemy above obstacle
+                        enemy.y = obstacle.y - enemy.height; // Push enemy above the obstacle
                     }
+                    enemy.dy = 0; // Stop vertical movement upon collision
                 }
             }
         });
     }
+
 
     #checkEnemyWithBoundariesCollisions(enemy, canvas) {
         if (CollisionDetection.checkCollision(enemy, canvas)) {
@@ -500,17 +496,7 @@ export class CollisionManager {
             // Check for collision with obstacles
             obstacles.forEach(obstacle => {
                 if (CollisionDetection.checkCollision(projectile, obstacle)) {
-                    // Trigger particle break effect on the projectile
-                    projectile.createBreakEffect();
-
-                    // Stop the projectile's movement after collision
-                    projectile.dx = 0;
-                    projectile.dy = 0;
-
-                    // Remove the projectile immediately if all particles have expired
-                    if (projectile.allParticlesExpired()) {
-                        enemy.projectiles.splice(index, 1);
-                    }
+                    enemy.projectiles.splice(index, 1);
                 }
             });
 
@@ -547,45 +533,23 @@ export class CollisionManager {
         });
     }
 
-    // Check collision between a moving obstacle and all static obstacles
     #checkMovingObstacleWithStaticObstaclesCollisions(movingObstacle, staticObstacles) {
         staticObstacles.forEach(staticObstacle => {
             if (CollisionDetection.checkCollision(movingObstacle, staticObstacle)) {
-                // Detect which side the moving obstacle collided on (top, bottom, left, or right)
-                if (movingObstacle.x < staticObstacle.x && movingObstacle.x + movingObstacle.width > staticObstacle.x) {
-                    // Collision from the left
-                    movingObstacle.dx = -Math.abs(movingObstacle.dx);
-                } else if (movingObstacle.x > staticObstacle.x && movingObstacle.x < staticObstacle.x + staticObstacle.width) {
-                    // Collision from the right
-                    movingObstacle.dx = Math.abs(movingObstacle.dx);
-                }
-
-                if (movingObstacle.y < staticObstacle.y && movingObstacle.y + movingObstacle.height > staticObstacle.y) {
-                    // Collision from the top
-                    movingObstacle.dy = -Math.abs(movingObstacle.dy);
-                } else if (movingObstacle.y > staticObstacle.y && movingObstacle.y < staticObstacle.y + staticObstacle.height) {
-                    // Collision from the bottom
-                    movingObstacle.dy = Math.abs(movingObstacle.dy);
-                }
-
-                Sounds.soundEffects.collision.play();
+                movingObstacle.dx = -movingObstacle.dx;
+                movingObstacle.dy = -movingObstacle.dy;
             }
         });
     }
 
     #checkMovingObstacleWithBoundariesCollisions(movingObstacle, canvas) {
         if (CollisionDetection.checkCollision(movingObstacle, canvas)) {
-            // Determine which boundary the moving obstacle collided with
             if (movingObstacle.x <= 0 || movingObstacle.x + movingObstacle.width >= canvas.width) {
-                // Horizontal boundary collision, invert dx
                 movingObstacle.dx = -movingObstacle.dx;
-                Sounds.soundEffects.collision.play();
             }
 
             if (movingObstacle.y <= 0 || movingObstacle.y + movingObstacle.height >= canvas.height) {
-                // Vertical boundary collision, invert dy
                 movingObstacle.dy = -movingObstacle.dy;
-                Sounds.soundEffects.collision.play();
             }
         }
     }
@@ -593,21 +557,8 @@ export class CollisionManager {
     #checkMovingObstacleWithMovingObstaclesCollisions(movingObstacle, movingObstacles) {
         movingObstacles.forEach(otherObstacle => {
             if (movingObstacle !== otherObstacle && CollisionDetection.checkCollision(movingObstacle, otherObstacle)) {
-                // Determine axis of collision to change direction accordingly
-                const dxOverlap = (movingObstacle.x + movingObstacle.width / 2) - (otherObstacle.x + otherObstacle.width / 2);
-                const dyOverlap = (movingObstacle.y + movingObstacle.height / 2) - (otherObstacle.y + otherObstacle.height / 2);
-
-                // Reverse direction only for movingObstacle based on collision axis
-                if (Math.abs(dxOverlap) > Math.abs(dyOverlap)) {
-                    // Horizontal collision
-                    movingObstacle.dx = -movingObstacle.dx;
-                } else {
-                    // Vertical collision
-                    movingObstacle.dy = -movingObstacle.dy;
-                }
-
-                // Play sound effect once for the collision
-                Sounds.soundEffects.collision.play();
+                movingObstacle.dx = -movingObstacle.dx;
+                movingObstacle.dy = -movingObstacle.dy;
             }
         });
     }

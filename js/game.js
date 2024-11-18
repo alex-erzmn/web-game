@@ -85,7 +85,7 @@ export class Game {
     }
 
     start() {
-        this.startCountdown(1, () => {
+        this.startCountdown(0, () => {
             Sounds.backgroundMusic.gameBackgroundMusic.play();
             this.gameRunning = true;
             this.then = new Date().getTime();

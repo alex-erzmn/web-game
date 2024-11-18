@@ -11,7 +11,7 @@ export class PlayerManager {
 
     initializePlayers() {
         const playerCount = parseInt(sessionStorage.getItem('playerCount')) || 1;
-        const defaultColors = ["#FF0000", "#00FF00", "#0000FF", "#ffdc40"];
+        const defaultColors = ["#FF0000", "#00FF00", "#0000FF", "#FFDC40"];
         const playerControls = [
             { controls: { up: 'w', down: 's', left: 'a', right: 'd' } },
             { controls: { up: 'ArrowUp', down: 'ArrowDown', left: 'ArrowLeft', right: 'ArrowRight' } },

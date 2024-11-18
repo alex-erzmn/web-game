@@ -63,7 +63,7 @@ export class LevelManager {
     updateLevel(delta) {
         this.obstacles.forEach(movingObstacle => {
             if (movingObstacle instanceof MovingObstacle) {
-                movingObstacle.update(delta);
+                movingObstacle.update(10, delta, this.game);
             }
         });
 
@@ -106,7 +106,14 @@ export class LevelManager {
                 fogIcon.classList.add("fog-icon");
                 levelDiv.appendChild(fogIcon);
             }
-    
+
+            if (i === this.levels.length) {
+                const trophyIcon = document.createElement("i");
+                trophyIcon.classList.add("fa-solid", "fa-trophy");
+                trophyIcon.classList.add("trophy-icon");
+                levelDiv.appendChild(trophyIcon);
+            }
+        
             // Highlight the current level
             if (i === currentLevel) {
                 levelDiv.id = "current-level";

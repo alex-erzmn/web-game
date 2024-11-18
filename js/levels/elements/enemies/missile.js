@@ -37,20 +37,24 @@ export class Missile extends Projectile {
     }
 
     followPlayer(player) {
-        const dx = player.x - this.x;
-        const dy = player.y - this.y;
+        const predictionFactor = 0.5;
+        const predictedX = player.x + player.dx * predictionFactor;
+        const predictedY = player.y + player.dy * predictionFactor;
+    
+        const dx = predictedX - this.x;
+        const dy = predictedY - this.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         const desiredDx = dx / distance;
         const desiredDy = dy / distance;
-
+    
         this.dx += (desiredDx - this.dx) * this.turnRate;
         this.dy += (desiredDy - this.dy) * this.turnRate;
-
+    
         const directionMagnitude = Math.sqrt(this.dx * this.dx + this.dy * this.dy);
         this.dx = (this.dx / directionMagnitude) * this.speed;
         this.dy = (this.dy / directionMagnitude) * this.speed;
-
+    
         if (this.speed < this.maxSpeed) {
             this.speed *= this.acceleration;
             if (this.speed > this.maxSpeed) {
@@ -58,6 +62,7 @@ export class Missile extends Projectile {
             }
         }
     }
+    
 
     draw(ctx) {
         if (this.particles.length === 0 && !this.hasCollided) {

@@ -1,0 +1,22 @@
+{
+    "levels": [
+        {
+            "start": { "x": 65, "y": 65 },
+            "exit": { "x": 0, "y": 0 },
+            "obstacles": [],
+            "enemies": [
+                { "type": "Missile", "x": 1000, "y": 600 }
+            ],
+            "items": [],
+            "effects": [
+                { "type": "Wind", "x": 100, "y": 100, "dx": 500, "dy": 0, "width": 1000, "height": 100, "force": 1},
+                { "type": "Wind", "x": 1000, "y": 100, "dx": 0, "dy": 500, "width": 100, "height": 500, "force": 1},
+                { "type": "Wind", "x": 100, "y": 500, "dx": -500, "dy": 0, "width": 1000, "height": 100, "force": 1},
+                { "type": "Wind", "x": 100, "y": 200, "dx": 0, "dy": -500, "width": 100, "height": 500, "force": 1},
+                { "type": "Mud", "x": 0, "y": 0, "width": 1200, "height": 700, "slowDownFactor": 0.1}
+  
+            ],
+            "fog": true
+        }
+    ]
+}

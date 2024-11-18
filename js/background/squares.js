@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
             player1: sessionStorage.getItem('playerColor1') || '#FF0000',
             player2: sessionStorage.getItem('playerColor2') || '#00FF00', 
             player3: sessionStorage.getItem('playerColor3') || '#0000FF', 
-            player4: sessionStorage.getItem('playerColor4') || '#ffdc40'
+            player4: sessionStorage.getItem('playerColor4') || '#FFDC40'
         };
     }
 

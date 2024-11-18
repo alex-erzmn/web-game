@@ -1,10 +1,10 @@
-import { Game } from '../game.js';
 import { Sounds } from '../background/sounds.js';
 
 export class EvaluationManager {
     constructor(game) {
         this.game = game;
         this.confettiInstance = confetti.create(this.game.getCanvas(), { resize: true });
+        this.confettiInterval = null;
     }
 
     updateScoreTable() {
@@ -65,11 +65,11 @@ export class EvaluationManager {
         ctx.font = '48px Arial';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText("All levels completed!", canvas.width / 2, canvas.height / 2);
+        ctx.fillText("All levels completed!", canvas.width / 2, canvas.height / 2 - 40);
 
         ctx.fillStyle = winner.color;
         ctx.font = '60px Arial';
-        ctx.fillText(`Winner: ${winner.color} player!`, canvas.width / 2, canvas.height / 2);
+        ctx.fillText(`You are the Winner!`, canvas.width / 2, canvas.height / 2 + 40);
         
         ctx.restore();
     }
@@ -78,7 +78,7 @@ export class EvaluationManager {
         const duration = 5 * 1000;
         const end = Date.now() + duration;
 
-        const interval = setInterval(() => {
+        this.confettiInterval = setInterval(() => {
             const timeLeft = end - Date.now();
             this.confettiInstance({
                 particleCount: 100,
@@ -91,10 +91,15 @@ export class EvaluationManager {
             });
 
             if (timeLeft <= 0) {
-                clearInterval(interval);
+                clearInterval(this.confettiInterval);
+                this.#stopConfetti();
                 const winner = this.game.getPlayers().reduce((max, player) => (player.points > max.points ? player : max));
                 this.#drawEndScreen(winner);
             }
         }, 250);
+    }
+
+    #stopConfetti() {
+        this.confettiInstance.reset();
     }
 }
