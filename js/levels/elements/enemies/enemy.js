@@ -39,6 +39,11 @@ export class Enemy extends Rectangle {
         this.projectiles.forEach(projectile => projectile.update(delta, players));
     }
 
+    updatePosition(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
     chooseRandomDirection() {
         const angle = Math.random() * Math.PI * 2;
         this.dx = Math.cos(angle) * this.speed;

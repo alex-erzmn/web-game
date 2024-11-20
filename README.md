@@ -67,8 +67,4 @@ This game was implemented using
 
 
 TODO:
-- MovingObstacle Collision (alles! vllt auch mit Schrittweise arbeiten i hat schon viel gebracht)
-- Squeezing bei MovingObstacle drückt auf Obstacle klappt nicht
-- Enemies können durch Wände gehen
-
 - A Good README in the repo, that explains what you did: design, difficulties, solutions, how to play etc.

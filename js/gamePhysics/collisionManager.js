@@ -49,6 +49,7 @@ export class CollisionManager {
      */
     #checkPlayerWithEnemiesCollisions(player, enemies, obstacles, canvas, start) {
         enemies.forEach(enemy => {
+            // Check if player is hit by enemy projectiles
             enemy.projectiles.forEach((projectile, index) => {
                 if (!player.isShielded && CollisionDetection.checkCollision(player, projectile)) {
                     player.updatePosition(this.game.getStart().x, this.game.getStart().y)
@@ -56,6 +57,7 @@ export class CollisionManager {
                     return; // No further checks needed!
                 }
             });
+            // Check if player is hit by the enemy itself
             this.#checkPlayerEnemyCollision(player, enemy, obstacles, canvas, start);
         });
     }
@@ -64,11 +66,9 @@ export class CollisionManager {
         let playerReset = false;
 
         if (CollisionDetection.checkCollision(enemy, player)) {
-            // Calculate the overlap in both x and y directions
             const overlapX = (player.x + player.width / 2) - (enemy.x + enemy.width / 2);
             const overlapY = (player.y + player.height / 2) - (enemy.y + enemy.height / 2);
 
-            // Determine the primary axis of collision (the larger overlap indicates the direction)
             if (Math.abs(overlapX) > Math.abs(overlapY)) {
                 if (overlapX > 0) {
                     player.updatePosition(enemy.x + enemy.width, player.y);
@@ -83,22 +83,11 @@ export class CollisionManager {
                 }
             }
 
-            // Calculate push direction vector
             const pushDirection = { x: enemy.dx, y: enemy.dy };
 
-            // Check if player is now stuck (squeezed) against boundary or obstacle
-            let isSqueezed = false;
-            if (this.#checkPlayerObstacleCollision(player, obstacles)) {
-                // Determine the obstacle normal at the collision point
-                const obstacleNormal = this.#getObstacleNormal(player, obstacles);
-                isSqueezed = this.#isPushDirectionPerpendicular(pushDirection, obstacleNormal);
-            } else if (CollisionDetection.checkCollision(player, canvas)) {
-                // Determine boundary normal based on player position
-                const boundaryNormal = this.#getBoundaryNormal(player, canvas);
-                isSqueezed = this.#isPushDirectionPerpendicular(pushDirection, boundaryNormal);
-            }
+            const isSqueezed = this.#checkPlayerObstacleCollision(player, obstacles) ||
+                CollisionDetection.checkCollision(player, canvas);
 
-            // Apply squeeze effect if player is stuck against a boundary or obstacle directly
             if (isSqueezed && !player.isSqueezed) {
                 player.isSqueezed = true;
                 player.squeezeFactor = 1.0;
@@ -113,81 +102,17 @@ export class CollisionManager {
         return playerReset;
     }
 
-    // ----------------- Handle Squeezing Detection -----------------
-
-    // Helper function to get the normal vector of the boundary
-    #getBoundaryNormal(player, canvas) {
-        if (player.x <= 0) return { x: 1, y: 0 };              // Left boundary
-        if (player.x + player.width >= canvas.width) return { x: -1, y: 0 }; // Right boundary
-        if (player.y <= 0) return { x: 0, y: 1 };              // Top boundary
-        if (player.y + player.height >= canvas.height) return { x: 0, y: -1 }; // Bottom boundary
-        return null;
-    }
-
-    // Helper function to get the normal vector of the obstacle at collision point
-    #getObstacleNormal(player, obstacle) {
-        // Calculate overlap in each direction
-        const leftOverlap = player.x + player.width - obstacle.x;             // Overlap on the left side
-        const rightOverlap = obstacle.x + obstacle.width - player.x;          // Overlap on the right side
-        const topOverlap = player.y + player.height - obstacle.y;             // Overlap on the top side
-        const bottomOverlap = obstacle.y + obstacle.height - player.y;        // Overlap on the bottom side
-
-        // Find the minimum overlap to determine the collision side
-        const minOverlap = Math.min(leftOverlap, rightOverlap, topOverlap, bottomOverlap);
-
-        // Determine the side of collision and return the appropriate normal vector
-        if (minOverlap === leftOverlap) {
-            return { x: -1, y: 0 }; // Collision on the left, normal points right
-        } else if (minOverlap === rightOverlap) {
-            return { x: 1, y: 0 };  // Collision on the right, normal points left
-        } else if (minOverlap === topOverlap) {
-            return { x: 0, y: -1 }; // Collision on the top, normal points down
-        } else if (minOverlap === bottomOverlap) {
-            return { x: 0, y: 1 };  // Collision on the bottom, normal points up
-        }
-
-        return null; // No collision detected
-    }
-
-
-    // Helper function to check if push direction is mostly perpendicular to the normal
-    #isPushDirectionPerpendicular(pushDirection, normal) {
-        if (!normal) return false;
-        // Normalize push direction and calculate dot product with the normal
-        const pushMagnitude = Math.sqrt(pushDirection.x ** 2 + pushDirection.y ** 2);
-        const normalizedPush = { x: pushDirection.x / pushMagnitude, y: pushDirection.y / pushMagnitude };
-        const dotProduct = normalizedPush.x * normal.x + normalizedPush.y * normal.y;
-
-        // If dotProduct is close to zero, push is perpendicular, indicating "squeezed"
-        return Math.abs(dotProduct) < 0.5; // Adjust threshold for "perpendicular" as needed
-    }
-
+    /**
+     * Check if the player is colliding with any static obstacles. In case a collision is detected the players position will be fixed to the obstacles boundaries.
+     * @param {*} player The player whose collisions are to be detected
+     * @param {*} obstacles The obstacles the player might collide with 
+     */
     #checkPlayerWithObstaclesCollisions(player, obstacles) {
-        obstacles.forEach(obstacle => {
+        const staticObstacles = obstacles.filter(obstacle => !(obstacle instanceof MovingObstacle));
+
+        staticObstacles.forEach(obstacle => {
             if (CollisionDetection.checkCollision(player, obstacle)) {
-                // Calculate overlaps on each side
-                const overlapTop = player.y + player.height - obstacle.y;
-                const overlapBottom = obstacle.y + obstacle.height - player.y;
-                const overlapLeft = player.x + player.width - obstacle.x;
-                const overlapRight = obstacle.x + obstacle.width - player.x;
-
-                // Find the minimum overlap
-                const minOverlap = Math.min(overlapTop, overlapBottom, overlapLeft, overlapRight);
-
-                // Resolve collision based on the smallest overlap direction
-                if (minOverlap === overlapTop) {
-                    // Collision from the top
-                    player.updatePosition(player.x, obstacle.y - player.height);
-                } else if (minOverlap === overlapBottom) {
-                    // Collision from the bottom
-                    player.updatePosition(player.x, obstacle.y + obstacle.height);
-                } else if (minOverlap === overlapLeft) {
-                    // Collision from the left
-                    player.updatePosition(obstacle.x - player.width, player.y);
-                } else if (minOverlap === overlapRight) {
-                    // Collision from the right
-                    player.updatePosition(obstacle.x + obstacle.width, player.y);
-                }
+                this.#handleActorWithObstacleCollision(player, obstacle);
             }
         });
     }
@@ -214,19 +139,110 @@ export class CollisionManager {
         }
     }
 
+    /**
+     * Check if the player is colliding with any moving obstacles. In case a collision is detected the players position will be fixed to the obstacles boundaries.
+     * The player can also be pushed by the moving obstacle. In case the player is pushed between the moving obstacle and another obstacle or the canvas boundaries he will be squeezed.
+     * @param {*} player The player whose collisions are to be detected
+     * @param {*} obstacles The obstacles the player might collide with (static and moving obstacles)
+     * @param {*} canvas The game canvas
+     * @param {*} start The starting position of the current level
+     * @returns 
+     */
     #checkPlayerWithMovingObstaclesCollisions(player, obstacles, canvas, start) {
-        // Check if player is colliding with movingObstacle (maybe pushed or squeezed)
-        this.#checkPlayerWithMovingObstacle(
-            player, obstacles.filter(obs => obs instanceof MovingObstacle),
-            canvas, obstacles, start
-        );
+        const movingObstacles = obstacles.filter(obs => obs instanceof MovingObstacle);
+        let playerReset = false;
+
+        movingObstacles.forEach(movingObstacle => {
+            if (CollisionDetection.checkCollision(movingObstacle, player)) {
+                this.#handleActorWithObstacleCollision(player, movingObstacle);
+
+                const isSqueezed = this.#checkPlayerObstacleCollision(player, obstacles) ||
+                    CollisionDetection.checkCollision(player, canvas);
+
+                if (isSqueezed && !player.isSqueezed) {
+                    player.isSqueezed = true;
+                    player.squeezeFactor = 1.0;
+                    player.squeezeSteps = 10;
+                    player.squeezeDirection = { dx: movingObstacle.dx, dy: movingObstacle.dy };
+                    Sounds.soundEffects.squeeze.play();
+                    playerReset = true;
+                }
+            }
+        });
+
+        this.#handleSqueezedAnimation(player, start);
+
+        return playerReset;
     }
 
+    // Check if a player collides with an obstacle
+    #checkPlayerObstacleCollision(player, obstacles) {
+        for (const obstacle of obstacles) {
+            if (CollisionDetection.checkCollision(player, obstacle)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if a player is colliding with other players. In case a collision is detected the players will be pushed apart along the axis of collision.
+     * @param {*} player The player to detect collisions for
+     * @param {*} players The other players in the game
+     * @param {*} obstacles The obstacles the players might collide with
+     * @param {*} canvas The game canvas
+     */
     #checkPlayerWithPlayersCollisions(player, players, obstacles, canvas) {
-        // TODO: check should maybe not be for all players. Otherwise they do double movement? Or is OK?
         players.forEach(otherPlayer => {
-            if (player !== otherPlayer) {  // Avoid self-collision check
-                this.#checkPlayerPlayerCollision(player, otherPlayer, obstacles, canvas);
+            if (player !== otherPlayer && CollisionDetection.checkCollision(player, otherPlayer)) {
+                // Calculate the horizontal and vertical distances
+                const dx = otherPlayer.x - player.x;
+                const dy = otherPlayer.y - player.y;
+                const pushDistance = 2; // Customize this distance for the "push" strength
+
+                // Determine primary push direction (horizontal or vertical)
+                if (Math.abs(dx) > Math.abs(dy)) {
+                    // Push along the x-axis
+                    const newCurrentX = player.x - Math.sign(dx) * pushDistance;
+                    const newOtherX = otherPlayer.x + Math.sign(dx) * pushDistance;
+
+                    // --- Check collision for player on the x-axis ---
+                    let previousX = player.x;
+                    player.updatePosition(newCurrentX, player.y);
+                    if (CollisionDetection.checkCollision(player, canvas) ||
+                        this.#checkPlayerObstacleCollision(player, obstacles)) {
+                        player.updatePosition(previousX, player.y); // Revert if collision detected
+                    }
+
+                    // --- Check collision for otherPlayer on the x-axis ---
+                    let previousOtherX = otherPlayer.x;
+                    otherPlayer.updatePosition(newOtherX, otherPlayer.y);
+                    if (CollisionDetection.checkCollision(otherPlayer, canvas) ||
+                        this.#checkPlayerObstacleCollision(otherPlayer, obstacles)) {
+                        otherPlayer.updatePosition(previousOtherX, otherPlayer.y); // Revert if collision detected
+                    }
+
+                } else {
+                    // Push along the y-axis
+                    const newCurrentY = player.y - Math.sign(dy) * pushDistance;
+                    const newOtherY = otherPlayer.y + Math.sign(dy) * pushDistance;
+
+                    // --- Check collision for player on the y-axis ---
+                    let previousY = player.y;
+                    player.updatePosition(player.x, newCurrentY);
+                    if (CollisionDetection.checkCollision(player, canvas) ||
+                        this.#checkPlayerObstacleCollision(player, obstacles)) {
+                        player.updatePosition(player.x, previousY); // Revert if collision detected
+                    }
+
+                    // --- Check collision for otherPlayer on the y-axis ---
+                    let previousOtherY = otherPlayer.y;
+                    otherPlayer.updatePosition(otherPlayer.x, newOtherY);
+                    if (CollisionDetection.checkCollision(otherPlayer, canvas) ||
+                        this.#checkPlayerObstacleCollision(otherPlayer, obstacles)) {
+                        otherPlayer.updatePosition(otherPlayer.x, previousOtherY); // Revert if collision detected
+                    }
+                }
             }
         });
     }
@@ -261,64 +277,8 @@ export class CollisionManager {
         }
     }
 
-    #checkPlayerWithMovingObstacle(player, movingObstacles, canvas, obstacles, start) {
-        let playerReset = false;
-
-        movingObstacles.forEach(movingObstacle => {
-            if (CollisionDetection.checkCollision(movingObstacle, player)) {
-                // Prevent the player from overlapping with the obstacle's boundary
-                if (Math.abs(movingObstacle.dx) > Math.abs(movingObstacle.dy)) {
-                    if (player.x < movingObstacle.x) {
-                        player.updatePosition(movingObstacle.x - player.width, player.y); // Align to the left
-                    } else {
-                        player.updatePosition(movingObstacle.x + movingObstacle.width, player.y); // Align to the right
-                    }
-                } else {
-                    if (player.y < movingObstacle.y) {
-                        player.updatePosition(player.x, movingObstacle.y - player.height); // Align to the top
-                    } else {
-                        player.updatePosition(player.x, movingObstacle.y + movingObstacle.height); // Align to the bottom
-                    }
-                }
-
-                // Apply obstacle's movement to the player if not squeezed
-                if (!player.isSqueezed) {
-                    player.x += movingObstacle.dx;
-                    player.y += movingObstacle.dy;
-                }
-
-                // Check if player is stuck (squeezed)
-                const isSqueezed = this.#checkPlayerObstacleCollision(player, obstacles) ||
-                    CollisionDetection.checkCollision(player, canvas);
-
-                if (isSqueezed && !player.isSqueezed) {
-                    player.isSqueezed = true;
-                    player.squeezeFactor = 1.0;
-                    player.squeezeSteps = 10;
-                    player.squeezeDirection = { dx: movingObstacle.dx, dy: movingObstacle.dy };
-                    Sounds.soundEffects.squeeze.play();
-                    playerReset = true;
-                }
-            }
-        });
-
-        this.#handleSqueezedAnimation(player, start);
-
-        return playerReset;
-    }
-
-    // Check if a player collides with an obstacle
-    #checkPlayerObstacleCollision(player, obstacles) {
-        for (const obstacle of obstacles) {
-            if (CollisionDetection.checkCollision(player, obstacle)) {
-                return true; // Stop immediately if a collision is found
-            }
-        }
-        return false; // Only returns false if no collisions are detected
-    }
-
+    // Handle squeeze animation with realistic effect
     #handleSqueezedAnimation(player, start) {
-        // Handle squeeze animation with realistic effect
         if (player.isSqueezed) {
             // Calculate squeeze effects based on direction magnitude
             if (Math.abs(player.squeezeDirection.x) > Math.abs(player.squeezeDirection.y)) {
@@ -352,61 +312,40 @@ export class CollisionManager {
         }
     }
 
+    // Handle collision between an actor (Player or Enemie) and an obstacle
+    #handleActorWithObstacleCollision(actor, obstacle) {
+        // Calculate overlaps on each side
+        const overlapTop = actor.y + actor.height - obstacle.y;
+        const overlapBottom = obstacle.y + obstacle.height - actor.y;
+        const overlapLeft = actor.x + actor.width - obstacle.x;
+        const overlapRight = obstacle.x + obstacle.width - actor.x;
 
-    #checkPlayerPlayerCollision(player, otherPlayer, obstacles, canvas) {
-        if (player !== otherPlayer && CollisionDetection.checkCollision(player, otherPlayer)) {
-            // Calculate the horizontal and vertical distances
-            const dx = otherPlayer.x - player.x;
-            const dy = otherPlayer.y - player.y;
-            const pushDistance = 2; // Customize this distance for the "push" strength
+        // Find the minimum overlap
+        const minOverlap = Math.min(overlapTop, overlapBottom, overlapLeft, overlapRight);
 
-            // Determine primary push direction (horizontal or vertical)
-            if (Math.abs(dx) > Math.abs(dy)) {
-                // Push along the x-axis
-                const newCurrentX = player.x - Math.sign(dx) * pushDistance;
-                const newOtherX = otherPlayer.x + Math.sign(dx) * pushDistance;
-
-                // --- Check collision for player on the x-axis ---
-                let previousX = player.x;
-                player.updatePosition(newCurrentX, player.y);
-                if (CollisionDetection.checkCollision(player, canvas) ||
-                    this.#checkPlayerObstacleCollision(player, obstacles)) {
-                    player.updatePosition(previousX, player.y); // Revert if collision detected
-                }
-
-                // --- Check collision for otherPlayer on the x-axis ---
-                let previousOtherX = otherPlayer.x;
-                otherPlayer.updatePosition(newOtherX, otherPlayer.y);
-                if (CollisionDetection.checkCollision(otherPlayer, canvas) ||
-                    this.#checkPlayerObstacleCollision(otherPlayer, obstacles)) {
-                    otherPlayer.updatePosition(previousOtherX, otherPlayer.y); // Revert if collision detected
-                }
-
-            } else {
-                // Push along the y-axis
-                const newCurrentY = player.y - Math.sign(dy) * pushDistance;
-                const newOtherY = otherPlayer.y + Math.sign(dy) * pushDistance;
-
-                // --- Check collision for player on the y-axis ---
-                let previousY = player.y;
-                player.updatePosition(player.x, newCurrentY);
-                if (CollisionDetection.checkCollision(player, canvas) ||
-                    this.#checkPlayerObstacleCollision(player, obstacles)) {
-                    player.updatePosition(player.x, previousY); // Revert if collision detected
-                }
-
-                // --- Check collision for otherPlayer on the y-axis ---
-                let previousOtherY = otherPlayer.y;
-                otherPlayer.updatePosition(otherPlayer.x, newOtherY);
-                if (CollisionDetection.checkCollision(otherPlayer, canvas) ||
-                    this.#checkPlayerObstacleCollision(otherPlayer, obstacles)) {
-                    otherPlayer.updatePosition(otherPlayer.x, previousOtherY); // Revert if collision detected
-                }
-            }
+        // Resolve collision based on the smallest overlap direction
+        if (minOverlap === overlapTop) {
+            // Collision from the top
+            actor.updatePosition(actor.x, obstacle.y - actor.height);
+        } else if (minOverlap === overlapBottom) {
+            // Collision from the bottom
+            actor.updatePosition(actor.x, obstacle.y + obstacle.height);
+        } else if (minOverlap === overlapLeft) {
+            // Collision from the left
+            actor.updatePosition(obstacle.x - actor.width, actor.y);
+        } else if (minOverlap === overlapRight) {
+            // Collision from the right
+            actor.updatePosition(obstacle.x + obstacle.width, actor.y);
         }
     }
 
+
+
+
     // ---------- Enemy Collision Checks ----------
+
+
+
 
     checkEnemyCollisions() {
         const enemies = this.game.getEnemies();
@@ -423,6 +362,11 @@ export class CollisionManager {
         });
     }
 
+    /**
+     * Check if an enemy is colliding with other enemies. In case a collision is detected the enemies will be pushed apart along the axis of collision.
+     * @param {*} enemy The enemy to detect collisions for
+     * @param {*} enemies The other enemies in the game
+     */
     #checkEnemyWithEnemiesCollisions(enemy, enemies) {
         enemies.forEach(otherEnemy => {
             if (enemy !== otherEnemy && CollisionDetection.checkCollision(enemy, otherEnemy)) {
@@ -454,36 +398,25 @@ export class CollisionManager {
         });
     }
 
+    /**
+     * Check if an enemy is colliding with any obstacles. In case a collision is detected the enemies position will be fixed to the obstacles boundaries.
+     * @param {*} enemy The enemy to detect collisions for
+     * @param {*} obstacles The obstacles the enemy might collide with
+     */
     #checkEnemyWithObstaclesCollisions(enemy, obstacles) {
         obstacles.forEach(obstacle => {
             if (CollisionDetection.checkCollision(enemy, obstacle)) {
-                // Calculate the overlap
-                const dxOverlap = (enemy.x + enemy.width / 2) - (obstacle.x + obstacle.width / 2);
-                const dyOverlap = (enemy.y + enemy.height / 2) - (obstacle.y + obstacle.height / 2);
-
-                // Resolve overlap based on the smallest penetration axis
-                if (Math.abs(dxOverlap) > Math.abs(dyOverlap)) {
-                    // Horizontal collision
-                    if (dxOverlap > 0) {
-                        enemy.x = obstacle.x + obstacle.width; // Push enemy to the right of the obstacle
-                    } else {
-                        enemy.x = obstacle.x - enemy.width; // Push enemy to the left of the obstacle
-                    }
-                    enemy.dx = 0; // Stop horizontal movement upon collision
-                } else {
-                    // Vertical collision
-                    if (dyOverlap > 0) {
-                        enemy.y = obstacle.y + obstacle.height; // Push enemy below the obstacle
-                    } else {
-                        enemy.y = obstacle.y - enemy.height; // Push enemy above the obstacle
-                    }
-                    enemy.dy = 0; // Stop vertical movement upon collision
-                }
+                this.#handleActorWithObstacleCollision(enemy, obstacle)
             }
         });
     }
 
-
+    /**
+     * Check if an enemy is colliding with the canvas boundaries of the game. In case a collision is detected the enemies position
+     * will be fixed to the boundaries.
+     * @param {*} enemy The enemy to detect collisions for
+     * @param {*} canvas The game canvas
+     */
     #checkEnemyWithBoundariesCollisions(enemy, canvas) {
         if (CollisionDetection.checkCollision(enemy, canvas)) {
             enemy.x = Math.max(0, Math.min(canvas.width - enemy.width, enemy.x)); // Adjust for enemy width
@@ -491,6 +424,12 @@ export class CollisionManager {
         }
     }
 
+    /**
+     * Check if an enemy's projectiles are colliding with any obstacles or the canvas boundaries. In case a collision is detected the projectile will be removed.
+     * @param {*} enemy The enemy to detect collisions for
+     * @param {*} obstacles The obstacles the enemy's projectiles might collide with
+     * @param {*} canvas The game canvas
+     */
     #checkEnemiesProjectilesWithObstaclesOrBoundariesCollisions(enemy, obstacles, canvas) {
         enemy.projectiles.forEach((projectile, index) => {
             // Check for collision with obstacles
@@ -506,6 +445,11 @@ export class CollisionManager {
         });
     }
 
+    /**
+     * Check if an enemy's projectiles are colliding with other enemies' projectiles. In case a collision is detected both projectiles will be removed.
+     * @param {*} enemy The enemy to detect collisions for
+     * @param {*} enemies The other enemies in the game
+     */
     #checkEnemiesProjectilesWithProjectilesCollisions(enemy, enemies) {
         enemy.projectiles.forEach((projectile, indexProjectile) => {
             enemies.forEach(otherEnemy => {
@@ -519,7 +463,11 @@ export class CollisionManager {
         });
     }
 
+
+
     // ---------- Moving Obstacle Collision Checks ----------
+
+
 
     checkMovingObstacleCollisions() {
         const movingObstacles = this.game.getObstacles().filter(obs => obs instanceof MovingObstacle);
@@ -533,6 +481,11 @@ export class CollisionManager {
         });
     }
 
+    /**
+     * Check if a moving obstacle is colliding with any static obstacles. In case a collision is detected the moving obstacles direction will be changed.
+     * @param {*} movingObstacle The moving obstacle to detect collisions
+     * @param {*} staticObstacles The static obstacles the moving obstacle might collide with
+     */
     #checkMovingObstacleWithStaticObstaclesCollisions(movingObstacle, staticObstacles) {
         staticObstacles.forEach(staticObstacle => {
             if (CollisionDetection.checkCollision(movingObstacle, staticObstacle)) {
@@ -542,6 +495,11 @@ export class CollisionManager {
         });
     }
 
+    /**
+     * Check if a moving obstacle is colliding with the canvas boundaries of the game. In case a collision is detected the moving obstacles direction will be changed.
+     * @param {*} movingObstacle The moving obstacle to detect collisions
+     * @param {*} canvas The game canvas
+     */
     #checkMovingObstacleWithBoundariesCollisions(movingObstacle, canvas) {
         if (CollisionDetection.checkCollision(movingObstacle, canvas)) {
             if (movingObstacle.x <= 0 || movingObstacle.x + movingObstacle.width >= canvas.width) {
@@ -554,6 +512,11 @@ export class CollisionManager {
         }
     }
 
+    /**
+     * Check if a moving obstacle is colliding with other moving obstacles. In case a collision is detected the moving obstacles direction will be changed.
+     * @param {*} movingObstacle The moving obstacle to detect collisions
+     * @param {*} movingObstacles The other moving obstacles in the game
+     */
     #checkMovingObstacleWithMovingObstaclesCollisions(movingObstacle, movingObstacles) {
         movingObstacles.forEach(otherObstacle => {
             if (movingObstacle !== otherObstacle && CollisionDetection.checkCollision(movingObstacle, otherObstacle)) {

@@ -1,4 +1,4 @@
-import { Sounds } from "../background/sounds.js";
+import { Sounds } from "./sounds.js";
 
 document.addEventListener("DOMContentLoaded", function () {
     const muteMusicButton = document.getElementById("muteMusicButton");
