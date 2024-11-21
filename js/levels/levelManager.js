@@ -68,7 +68,7 @@ export class LevelManager {
         });
 
         this.enemies.forEach(enemy => {
-            enemy.update(this.game.getPlayers().filter(obj => !obj.isFinished), delta);
+            enemy.update(this.game.getPlayers().filter(player => !player.finished), delta);
         });
 
         this.effects.forEach(effect => {
