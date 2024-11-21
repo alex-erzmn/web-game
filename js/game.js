@@ -85,7 +85,7 @@ export class Game {
     }
 
     start() {
-        this.startCountdown(0, () => {
+        this.startCountdown(5, () => {
             Sounds.backgroundMusic.gameBackgroundMusic.play();
             this.gameRunning = true;
             this.then = new Date().getTime();
@@ -183,7 +183,7 @@ export class Game {
     nextLevel() {
         if (this.levelManager.nextLevel()) {
             this.gameRunning = false;
-            this.startCountdown(1, () => {
+            this.startCountdown(3, () => {
                 this.levelManager.prepareStage();
                 this.playerManager.resetPlayers();
                 this.gameRunning = true;
