@@ -58,6 +58,8 @@ To ensure that the game.js class only manages the game process (and some additio
 - EvaluationManager
 - CollisionManager
 
+There are a few things that are not managed by a specific manager that are grouped together in the "background" folder, as they are more background functions. These include managing the background animation, sounds and settings.
+
 In the following chapters, I will explain the responsibilities for each manager.
 
 ### Player
