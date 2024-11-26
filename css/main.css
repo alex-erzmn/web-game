@@ -24,6 +24,7 @@
   --orange: #ff8d47;
   --dark_purple: #696fab;
   --purple: #787ec5;
+  --gray: #b0b0b0;
 }
 
 .visually-hidden {
@@ -275,4 +276,39 @@ body::before {
   z-index: 10;
   font-size: 16px;
   padding: 5px;
+}
+
+/* ----- Keyboard Layout Option ----- */
+
+.layout-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.layout-option input {
+  display: none;
+}
+
+.layout-option label {
+  display: inline-block;
+  padding: 15px;
+  margin: 0 10px;
+  background-color: var(--gray);
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  width: 70px;
+  text-align: center;
+}
+
+.layout-option input:checked+label {
+  background-color: var(--orange);
+}
+
+.layout-option label:hover {
+  background-color: var(--gray);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
 }

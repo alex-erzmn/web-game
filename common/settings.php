@@ -41,6 +41,17 @@
     <!-- Player control section -->
     <div class="settings-content">
         <h2>Player Controls</h2>
+        <div class="layout-option">
+            <div>
+                <input type="radio" name="keyboardLayout" id="qwertz" value="QWERTZ" checked>
+                <label for="qwertz">QWERTZ</label>
+            </div>
+            <div>
+                <input type="radio" name="keyboardLayout" id="azerty" value="AZERTY">
+                <label for="azerty">AZERTY</label>
+            </div>
+        </div>
+
         <div class="control-map">
             <div class="player-control" id="player1Control">
                 <div class="control-keys">

@@ -12,20 +12,24 @@ export class PlayerManager {
     initializePlayers() {
         const playerCount = parseInt(sessionStorage.getItem('playerCount')) || 1;
         const defaultColors = ["#FF0000", "#00FF00", "#0000FF", "#FFDC40"];
-        const playerControls = [
-            { controls: { up: 'w', down: 's', left: 'a', right: 'd' } },
-            { controls: { up: 'ArrowUp', down: 'ArrowDown', left: 'ArrowLeft', right: 'ArrowRight' } },
-            { controls: { up: 'i', down: 'k', left: 'j', right: 'l' } },
-            { controls: { up: 't', down: 'g', left: 'f', right: 'h' } },
-        ];
-
+        const defaultControls = {
+            player1: { up: 'w', down: 's', left: 'a', right: 'd' },
+            player2: { up: 'ArrowUp', down: 'ArrowDown', left: 'ArrowLeft', right: 'ArrowRight' },
+            player3: { up: 'i', down: 'k', left: 'j', right: 'l' },
+            player4: { up: 't', down: 'g', left: 'f', right: 'h' },
+        };
+    
+        const playerControls = sessionStorage.getItem('playerControls')
+            ? JSON.parse(sessionStorage.getItem('playerControls'))
+            : defaultControls;
+    
         for (let i = 0; i < playerCount; i++) {
             const color = sessionStorage.getItem(`playerColor${i + 1}`) || defaultColors[i];
-            const controls = playerControls[i].controls;
+            const controls = playerControls[`player${i + 1}`] || defaultControls[`player${i + 1}`]; 
             this.players.push(new Player(0, 0, color, controls));
         }
     }
-
+    
     updatePlayers(delta) {
         this.players.forEach(player => {
     

@@ -31,7 +31,7 @@ Note that at every fifth level, a fog appears which reduces the players view to 
 
 
 ## How-To-Play
-You can play with up to four players using the same keyboard. By clicking on the settings wheel in the top left-hand corner, you can change the colours of the players, and you can also see each player's controls to move them around. You can also turn on/off background music or sound effects in the top right corner.
+You can play with up to four players using the same keyboard. By clicking on the settings wheel in the top left-hand corner, you can change the colors of the players, and you can also see each player's controls to move them around and switch between the two keyboard layouts "QWERTZ" and "AZERTY". You can also turn on/off background music or sound effects in the top right corner.
 
 By selecting the number of players in the middle and clicking the Start Game button, you can initialise the start of the game. After a 5 second countdown, the first level will begin. After each player has reached the exit, a 3 second countdown will introduce the next level. **The goal of each level is to reach the yellow exit circle.**
 
