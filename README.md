@@ -1,4 +1,4 @@
-Based on the course ‘W3Cx JS.0xJavaScript Introduction’ by Michael Buffat on edx, this project was created to implement a web game with JavaScript.
+Based on the course ‘W3Cx JS.0xJavaScript Introduction’ by Michel Buffat on edx, this project was created to implement a web game with JavaScript.
 
 # Overview
 The game called *square escape* is a simple 2D multiplayer game, but with envolving levels.
